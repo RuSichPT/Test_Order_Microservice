@@ -1,0 +1,200 @@
+openapi: 3.0.0
+info:
+  title: Test Order Microservice
+  version: 1.0.0
+  description: Order microservice REST API v1.0
+servers:
+  - url: http://192.168.0.7:8080
+paths:
+  /order:
+    post:
+      summary: Request for adding a new Order
+      description: Creates a new order with parameters are contained in the request body
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            example:
+              orderStatusId: 1
+              customerName: "John Doe"
+              customerPhone: "+7-905-345-4523"
+              customerComment: "Pls. call me back"
+              orderItems: [
+                {
+                  "itemName": "Item #1"
+                },
+                {
+                  "itemName": "Item #2"
+                },
+                {
+                  "itemName": "Item #3"
+                }
+              ]
+      responses:
+        '200':
+          description: A new order has been successfully created (200 or 201)
+        '201':
+          description: A new order has been successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+              example:
+                id: 100001
+                orderStatusId: 1
+                customerName: "John Doe"
+                customerPhone: "+7-905-345-4523"
+                customerComment: "Pls. call me back"
+                orderItems: [
+                  {
+                    "id": 1000,
+                    "orderId": 100001,
+                    "itemName": "Item #1"
+                  },
+                  {
+                    "id": 1001,
+                    "orderId": 100001,
+                    "itemName": "Item #2"
+                  },
+                  {
+                    "id": 1002,
+                    "orderId": 100001,
+                    "itemName": "Item #3"
+                  }
+                ]
+        '500':
+          description: Server error
+  /order/{id}:
+    get:
+      summary: Get the Order by id
+      description: Returns object by "orderId" or returns null
+      parameters:
+        - in: path
+          name: id
+          description: Numeric ID of the Order object
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+              example:
+                id: 100001
+                orderStatusId: 1
+                customerName: "John Doe"
+                customerPhone: "+7-905-345-4523"
+                customerComment: "Pls. call me back"
+                orderItems: [
+                  {
+                    "id": 1000,
+                    "orderId": 100001,
+                    "itemName": "Item #1"
+                  },
+                  {
+                    "id": 1001,
+                    "orderId": 100001,
+                    "itemName": "Item #2"
+                  },
+                  {
+                    "id": 1002,
+                    "orderId": 100001,
+                    "itemName": "Item #3"
+                  }
+                ]
+        '404':
+          description: A resource with requested ID not found
+        '500':
+          description: Server error
+    put:
+      summary: Request for editing the Order by id
+      description: Updates order by id with parameters are contained in request body
+      parameters:
+        - in: path
+          name: id
+          description: Numeric ID of the Order which has to be updated
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            example:
+              id: 100001
+              orderStatusId: 1
+              customerName: "John Doe"
+              customerPhone: "+7-905-345-4523"
+              customerComment: "call me back"
+              orderItems: [
+                {
+                  "id": 1000,
+                  "orderId": 100001,
+                  "itemName": "Item #1"
+                },
+                {
+                  "id": 1001,
+                  "orderId": 100001,
+                  "itemName": "Item #2"
+                },
+                {
+                  "id": 1002,
+                  "orderId": 100001,
+                  "itemName": "Item #3"
+                }
+              ]
+      responses:
+        '200':
+          description: Order has been updated successfully
+        '500':
+          description: Server error
+    delete:
+      summary: Request for removing the Order by id
+      description: Removes order by id
+      parameters:
+        - in: path
+          name: id
+          description: Numeric ID of the Order object to be deleted
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The Order has been deleted successfully
+        '500':
+          description: Server error
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        orderStatusId:
+          type: integer
+        customerName:
+          type: string
+        customerPhone:
+          type: string
+        customerComment:
+          type: string
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        orderId:
+          type: integer
+        itemName:
+          type: string
