@@ -8,24 +8,19 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 @Mapper
 public interface OrderMapper {
-    @Select("SELECT * FROM \"order\"")
-    List<Order> getOrders();
 
-    @Select("SELECT * FROM \"order_item\"")
-    List<OrderItem> getOrderItems();
+    final String insert =
+            "INSERT INTO \"order\"(ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)" +
+            "VALUES (NEXTVAL('order_seq'), #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});";
+    final String selectId = "SELECT * FROM \"order\" WHERE id = #{id}";
+    final String deleteId = "DELETE FROM \"order\" WHERE id = #{id}";
 
-    @Select("SELECT * FROM \"order\" WHERE id = #{id}")
-    Order getOrderById(long id);
+    @Insert(insert)
+    public void createOrder(int orderStatusId, String customerName, String customerPhone, String customerComment);
 
-    @Select("SELECT * FROM \"order_item\" WHERE order_id = #{order_id}")
-    List<OrderItem> getOrderItemByOrderId(long order_id);
+    @Select(selectId)
+    public Order getOrder(int id);
 
-    @Insert("INSERT INTO \"order\" (order_status_id, customer_name, customer_phone, customer_comment)" +
-            " VALUES (#{order_status_id}, #{customer_name}, #{customer_phone}, #{customer_comment})")
-    void createOrder(long order_status_id, String customer_name, String customer_phone, String customer_comment);
-
-    //@Insert("INSERT INTO \"order_item\" VALUES (#{})")
-
-    @Delete("DELETE FROM ORDER WHERE id = #{id}")
-    Integer deleteOrderById(long id);
+    @Delete(deleteId)
+    public Integer deleteOrder(long id);
 }

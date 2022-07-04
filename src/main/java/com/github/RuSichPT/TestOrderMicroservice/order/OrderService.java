@@ -2,47 +2,36 @@ package com.github.RuSichPT.TestOrderMicroservice.order;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class OrderService {
+
     private final OrderMapper orderMapper;
+    private final OrderItemMapper orderItemMapper;
 
-    public OrderService(OrderMapper orderMapper) {
+    public OrderService(OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
         this.orderMapper = orderMapper;
+        this.orderItemMapper = orderItemMapper;
     }
 
-    public List<Order> getOrders()
+    public void createOrder(Order order)
     {
-        return orderMapper.getOrders();
+        orderMapper.createOrder(order.getOrderStatusId(), order.getCustomerName(),
+                order.getCustomerPhone(), order.getCustomerComment());
+        orderItemMapper.
     }
 
-    public List<OrderItem> getOrderItems()
+    public Order getOrder(int id)
     {
-        return orderMapper.getOrderItems();
-    }
-
-    public List<OrderItem> getOrderItemByOrderId(long order_id)
-    {
-        return orderMapper.getOrderItemByOrderId(order_id);
-    }
-
-    public Order getOrderById(long id)
-    {
-        Order order = orderMapper.getOrderById(id);
+        Order order = orderMapper.getOrder(id);
         if (order != null)
         {
-            order.setOrderItems(orderMapper.getOrderItemByOrderId(order.getId()));
+            order.setOrderItems(orderItemMapper.getOrderItemByOrderId(order.getId()));
         }
         return order;
     }
 
-
-
-//    public Order createOrder(Order order)
-//    {
-////        orderMapper.createOrder(order.getOrder_status_id(), order.getCustomer_name(), order.getCustomer_phone(), order.getCustomer_comment());
-////        return getOrderById()
-//    }
+    public void deleteOrder(long id)
+    {
+        orderMapper.deleteOrder(id);
+    }
 }

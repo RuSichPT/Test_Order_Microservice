@@ -4,11 +4,10 @@ import java.util.List;
 
 public class Order {
     private long id;
-    private int order_status_id;
-    private String customer_name;
-    private String customer_phone;
-    private String customer_comment;
-
+    private int orderStatusId;
+    private String customerName;
+    private String customerPhone;
+    private String customerComment;
     private List<OrderItem> orderItems;
 
     public long getId() {
@@ -20,35 +19,35 @@ public class Order {
     }
 
     public int getOrderStatusId() {
-        return order_status_id;
+        return orderStatusId;
     }
 
-    public void setOrderStatusId(int order_status_id) {
-        this.order_status_id = order_status_id;
+    public void setOrderStatusId(int orderStatusId) {
+        this.orderStatusId = orderStatusId;
     }
 
     public String getCustomerName() {
-        return customer_name;
+        return customerName;
     }
 
-    public void setCustomerName(String customer_name) {
-        this.customer_name = customer_name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public String getCustomerPhone() {
-        return customer_phone;
+        return customerPhone;
     }
 
-    public void setCustomerPhone(String customer_phone) {
-        this.customer_phone = customer_phone;
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
     }
 
     public String getCustomerComment() {
-        return customer_comment;
+        return customerComment;
     }
 
-    public void setCustomerComment(String customer_comment) {
-        this.customer_comment = customer_comment;
+    public void setCustomerComment(String customerComment) {
+        this.customerComment = customerComment;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -58,5 +57,4 @@ public class Order {
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
-
 }

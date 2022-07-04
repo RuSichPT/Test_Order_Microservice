@@ -3,9 +3,9 @@ package com.github.RuSichPT.TestOrderMicroservice.order;
 public class OrderItem {
     private long id;
 
-    private long order_id;
+    private long orderId;
 
-    private String item_name;
+    private String itemName;
 
     public long getId() {
         return id;
@@ -16,18 +16,18 @@ public class OrderItem {
     }
 
     public long getOrderId() {
-        return order_id;
+        return orderId;
     }
 
-    public void setOrderId(long order_id) {
-        this.order_id = order_id;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public String getItemName() {
-        return item_name;
+        return itemName;
     }
 
-    public void setItemName(String item_name) {
-        this.item_name = item_name;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 }
