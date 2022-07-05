@@ -1,6 +1,8 @@
 package com.github.RuSichPT.TestOrderMicroservice.order;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("order")
@@ -21,7 +23,12 @@ public class OrderController {
     @GetMapping(path = "{id}")
     public Order getOrder(@PathVariable int id)
     {
-        return orderService.getOrder(id);
+        Order order = orderService.getOrder(id);
+
+        if (order == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return order;
     }
 
     @PutMapping(path = "{id}")
