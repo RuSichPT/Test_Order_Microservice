@@ -1,25 +1,25 @@
 package com.github.RuSichPT.TestOrderMicroservice.order;
 
 public class OrderItem {
-    private long id;
+    private int id;
 
-    private long orderId;
+    private int orderId;
 
     private String itemName;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public long getOrderId() {
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
 

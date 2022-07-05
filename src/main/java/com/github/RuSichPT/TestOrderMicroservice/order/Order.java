@@ -3,18 +3,18 @@ package com.github.RuSichPT.TestOrderMicroservice.order;
 import java.util.List;
 
 public class Order {
-    private long id;
+    private int id;
     private int orderStatusId;
     private String customerName;
     private String customerPhone;
     private String customerComment;
     private List<OrderItem> orderItems;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

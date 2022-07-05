@@ -1,23 +1,30 @@
 package com.github.RuSichPT.TestOrderMicroservice.order;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface OrderItemMapper {
 
-    final String insert =
-            "INSERT INTO \"order_item\"(ID, ORDER_ID, ITEM_NAME)" +
-            "VALUES (#{orderId}, CURRVAL('order_seq'), #{itemName});";
-    final String selectOrderId = "SELECT * FROM \"order_item\" WHERE order_id = #{order_id}";
+    String insert = "INSERT INTO \"order_item\"(ID, ORDER_ID, ITEM_NAME)" +
+                    "VALUES (NEXTVAL('order_item_seq'), CURRVAL('order_seq'), #{itemName});";
+    String selectByOrderId = "SELECT * FROM \"order_item\" WHERE ORDER_ID = #{order_id}";
+    String updateByOrderId = "UPDATE \"order_item\" " +
+                             "SET ITEM_NAME = #{itemName} " +
+                             "WHERE ORDER_ID = #{order_id}";
+    String deleteByOrderId = "DELETE FROM \"order_item\" WHERE ORDER_ID = #{order_id}";
 
-    @Insert()
-    public void createOrder(int orderId, String itemName);
+    @Insert(insert)
+    void createOrder(String itemName);
 
-    @Select(selectOrderId)
-    public List<OrderItem> getOrderItemByOrderId(long order_id);
+    @Select(selectByOrderId)
+    List<OrderItem> getOrderItemByOrderId(int order_id);
+
+    @Update(updateByOrderId)
+    void updateByOrderId(int order_id, String itemName);
+
+    @Delete(deleteByOrderId)
+    void deleteOrderByOrderId(int order_id);
 
 }

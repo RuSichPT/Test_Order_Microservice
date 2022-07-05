@@ -1,9 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.order;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("order")
@@ -27,8 +24,14 @@ public class OrderController {
         return orderService.getOrder(id);
     }
 
+    @PutMapping(path = "{id}")
+    public void updateOrder(@PathVariable int id, @RequestBody Order order)
+    {
+        orderService.updateOrder(id, order);
+    }
+
     @DeleteMapping(path = "{id}")
-    public void deleteOrder(@PathVariable long id)
+    public void deleteOrder(@PathVariable int id)
     {
         orderService.deleteOrder(id);
     }

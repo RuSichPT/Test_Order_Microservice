@@ -17,7 +17,10 @@ public class OrderService {
     {
         orderMapper.createOrder(order.getOrderStatusId(), order.getCustomerName(),
                 order.getCustomerPhone(), order.getCustomerComment());
-        orderItemMapper.
+        for (OrderItem orderItem: order.getOrderItems())
+        {
+            orderItemMapper.createOrder(orderItem.getItemName());
+        }
     }
 
     public Order getOrder(int id)
@@ -30,8 +33,19 @@ public class OrderService {
         return order;
     }
 
-    public void deleteOrder(long id)
+    public void updateOrder(int id, Order order)
     {
+        orderMapper.updateOrder(id, order.getOrderStatusId(), order.getCustomerName(),
+                order.getCustomerPhone(), order.getCustomerComment());
+        for (OrderItem orderItem: order.getOrderItems())
+        {
+            orderItemMapper.updateByOrderId(id, orderItem.getItemName());
+        }
+    }
+
+    public void deleteOrder(int id)
+    {
+        orderItemMapper.deleteOrderByOrderId(id);
         orderMapper.deleteOrder(id);
     }
 }
