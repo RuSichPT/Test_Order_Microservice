@@ -13,8 +13,7 @@ public class OrderService {
 
     public void createOrder(Order order)
     {
-        orderMapper.createOrder(order.getOrderStatusId(), order.getCustomerName(),
-                order.getCustomerPhone(), order.getCustomerComment());
+        orderMapper.createOrder(order);
         for (OrderItem orderItem: order.getOrderItems())
         {
             orderItemMapper.createOrder(orderItem.getItemName());
@@ -33,8 +32,8 @@ public class OrderService {
 
     public void updateOrder(int id, Order order)
     {
-        orderMapper.updateOrder(id, order.getOrderStatusId(), order.getCustomerName(),
-                order.getCustomerPhone(), order.getCustomerComment());
+        order.setId(id);
+        orderMapper.updateOrder(order);
         for (OrderItem orderItem: order.getOrderItems())
         {
             orderItemMapper.updateByOrderId(id, orderItem.getItemName());

@@ -2,18 +2,43 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.com.github.RuSichPT.TestOrderMicroservice.order.OrderMapper">
+<mapper namespace="com.github.RuSichPT.TestOrderMicroservice.order.OrderMapper">
 
-<!--    <resultMap id="Order" type="com.com.github.RuSichPT.TestOrderMicroservice.order.Order">-->
-<!--        <id property="id" column="id"></id>-->
-<!--        <result property="orderStatusId" column="order_status_id"></result>-->
-<!--        <result property="customerName" column="customer_name"></result>-->
-<!--        <result property="customerPhone" column="customer_phone"></result>-->
-<!--        <result property="customerComment" column="customer_comment"></result>-->
+<!--    <resultMap id="OrderItem" type="com.github.RuSichPT.TestOrderMicroservice.order.OrderItem">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="orderId" column="order_id"/>-->
+<!--        <result property="itemName" column="item_name"/>-->
 <!--    </resultMap>-->
+
+<!--    <resultMap id="Order" type="com.github.RuSichPT.TestOrderMicroservice.order.Order">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="orderStatusId" column="order_status_id"/>-->
+<!--        <result property="customerName" column="customer_name"/>-->
+<!--        <result property="customerPhone" column="customer_phone"/>-->
+<!--        <result property="customerComment" column="customer_comment"/>-->
+<!--    </resultMap>-->
+
+    <insert id="createOrder" keyColumn="ID" keyProperty="id" parameterType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            SELECT NEXTVAL('ORDER_SEQ')
+        </selectKey>
+        INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
+        VALUES (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment})
+    </insert>
 
     <select id="getOrder" parameterType="int"  resultType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
         SELECT * FROM "order" WHERE ID = #{id}
     </select>
+
+    <update id="updateOrder" parameterType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+        UPDATE "order"
+        SET ORDER_STATUS_ID = #{orderStatusId}, CUSTOMER_NAME = #{customerName},
+        CUSTOMER_PHONE = #{customerPhone}, CUSTOMER_COMMENT = #{customerComment}
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteOrder" parameterType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+        DELETE FROM "order" WHERE ID = #{id}
+    </delete>
 
 </mapper>
