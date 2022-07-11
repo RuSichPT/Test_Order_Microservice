@@ -1,5 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.order;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -8,11 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("order")
 public class OrderController {
 
-    private final OrderService orderService;
-
-    public OrderController(OrderService orderService1) {
-        this.orderService = orderService1;
-    }
+    @Autowired
+    private OrderService orderService;
 
     @PostMapping
     public void createOrder(@RequestBody Order order)

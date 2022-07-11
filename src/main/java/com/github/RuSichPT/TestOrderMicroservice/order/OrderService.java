@@ -1,17 +1,15 @@
 package com.github.RuSichPT.TestOrderMicroservice.order;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class OrderService {
 
-    private final OrderMapper orderMapper;
-    private final OrderItemMapper orderItemMapper;
-
-    public OrderService(OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
-        this.orderMapper = orderMapper;
-        this.orderItemMapper = orderItemMapper;
-    }
+    @Autowired
+    private OrderMapper orderMapper;
+    @Autowired
+    private OrderItemMapper orderItemMapper;
 
     public void createOrder(Order order)
     {

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.com.github.RuSichPT.TestOrderMicroservice.order.OrderMapper">
+
+<!--    <resultMap id="Order" type="com.com.github.RuSichPT.TestOrderMicroservice.order.Order">-->
+<!--        <id property="id" column="id"></id>-->
+<!--        <result property="orderStatusId" column="order_status_id"></result>-->
+<!--        <result property="customerName" column="customer_name"></result>-->
+<!--        <result property="customerPhone" column="customer_phone"></result>-->
+<!--        <result property="customerComment" column="customer_comment"></result>-->
+<!--    </resultMap>-->
+
+    <select id="getOrder" parameterType="int"  resultType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+        SELECT * FROM "order" WHERE ID = #{id}
+    </select>
+
+</mapper>
