@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.RuSichPT.TestOrderMicroservice.order.OrderMapper">
+<mapper namespace="com.github.RuSichPT.TestOrderMicroservice.mappers.OrderMapper">
 
 <!--    <resultMap id="OrderItem" type="com.github.RuSichPT.TestOrderMicroservice.order.OrderItem">-->
 <!--        <id property="id" column="id"/>-->
@@ -18,7 +18,7 @@
 <!--        <result property="customerComment" column="customer_comment"/>-->
 <!--    </resultMap>-->
 
-    <insert id="createOrder" keyColumn="ID" keyProperty="id" parameterType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+    <insert id="insertOrder" keyColumn="ID" keyProperty="id" parameterType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
         <selectKey keyProperty="id" resultType="int" order="BEFORE">
             SELECT NEXTVAL('ORDER_SEQ')
         </selectKey>
@@ -26,7 +26,7 @@
         VALUES (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment})
     </insert>
 
-    <select id="getOrder" parameterType="int"  resultType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+    <select id="selectOrder" parameterType="int"  resultType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
         SELECT * FROM "order" WHERE ID = #{id}
     </select>
 

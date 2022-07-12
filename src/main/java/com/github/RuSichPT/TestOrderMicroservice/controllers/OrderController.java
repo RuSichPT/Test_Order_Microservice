@@ -1,5 +1,7 @@
-package com.github.RuSichPT.TestOrderMicroservice.order;
+package com.github.RuSichPT.TestOrderMicroservice.controllers;
 
+import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import com.github.RuSichPT.TestOrderMicroservice.services.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,18 +12,18 @@ import org.springframework.web.server.ResponseStatusException;
 public class OrderController {
 
     @Autowired
-    private OrderService orderService;
+    private OrderServiceImpl orderService;
 
     @PostMapping
-    public void createOrder(@RequestBody Order order)
+    public void insertOrder(@RequestBody Order order)
     {
-        orderService.createOrder(order);
+        orderService.insert(order);
     }
 
     @GetMapping(path = "{id}")
-    public Order getOrder(@PathVariable int id)
+    public Order selectOrder(@PathVariable int id)
     {
-        Order order = orderService.getOrder(id);
+        Order order = orderService.select(id);
 
         if (order == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -32,12 +34,12 @@ public class OrderController {
     @PutMapping(path = "{id}")
     public void updateOrder(@PathVariable int id, @RequestBody Order order)
     {
-        orderService.updateOrder(id, order);
+        orderService.update(id, order);
     }
 
     @DeleteMapping(path = "{id}")
     public void deleteOrder(@PathVariable int id)
     {
-        orderService.deleteOrder(id);
+        orderService.delete(id);
     }
 }

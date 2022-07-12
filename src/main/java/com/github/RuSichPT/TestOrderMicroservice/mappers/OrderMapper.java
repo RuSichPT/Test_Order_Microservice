@@ -1,14 +1,15 @@
-package com.github.RuSichPT.TestOrderMicroservice.order;
+package com.github.RuSichPT.TestOrderMicroservice.mappers;
 
+import com.github.RuSichPT.TestOrderMicroservice.order.Order;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
 public interface OrderMapper {
-    void createOrder(Order order);
+    void insertOrder(Order order);
 
-    Order getOrder(int id);
+    Order selectOrder(int id);
 
     void updateOrder(Order order);
 

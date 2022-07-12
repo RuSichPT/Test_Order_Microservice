@@ -2,25 +2,25 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.RuSichPT.TestOrderMicroservice.order.OrderItemMapper">
+<mapper namespace="com.github.RuSichPT.TestOrderMicroservice.mappers.OrderItemMapper">
 
-    <insert id="createOrder" parameterType="String">
+    <insert id="insertOrderItem" parameterType="String">
         INSERT INTO "order_item"(ID, ORDER_ID, ITEM_NAME)
         VALUES (NEXTVAL('order_item_seq'), CURRVAL('order_seq'), #{itemName})
     </insert>
 
-    <select id="getOrderItemByOrderId" parameterType="int"
+    <select id="selectOrderItemByOrderId" parameterType="int"
             resultType="com.github.RuSichPT.TestOrderMicroservice.order.OrderItem">
         SELECT * FROM "order_item" WHERE ORDER_ID = #{order_id}
     </select>
 
-    <update id="updateByOrderId" >
+    <update id="updateOrderItemByOrderId" >
         UPDATE "order_item"
         SET ITEM_NAME = #{itemName}
         WHERE ORDER_ID = #{order_id}
     </update>
 
-    <delete id="deleteOrderByOrderId">
+    <delete id="deleteOrderItemByOrderId">
         DELETE FROM "order_item" WHERE ORDER_ID = #{order_id}
     </delete>
 
