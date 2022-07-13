@@ -1,22 +1,21 @@
 package com.github.RuSichPT.TestOrderMicroservice.services;
 
-import com.github.RuSichPT.TestOrderMicroservice.order.Order;
-import com.github.RuSichPT.TestOrderMicroservice.order.OrderItem;
 import com.github.RuSichPT.TestOrderMicroservice.mappers.OrderItemMapper;
 import com.github.RuSichPT.TestOrderMicroservice.mappers.OrderMapper;
+import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import com.github.RuSichPT.TestOrderMicroservice.order.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    private OrderMapper orderMapper;
+    public OrderMapper orderMapper;
     @Autowired
-    private OrderItemMapper orderItemMapper;
+    public OrderItemMapper orderItemMapper;
 
     @Override
     public void insert(Order order)
@@ -37,19 +36,33 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void update(int id, Order newOrder)
     {
-        newOrder.setId(id);
-
         Order oldOrder = orderMapper.selectOrder(id);
 
-        List<OrderItem> list = oldOrder.getOrderItems();
-
-        for ()
-        list.contains()
+        if (id != newOrder.getId() || (oldOrder == null))
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         orderMapper.updateOrder(newOrder);
-        for (OrderItem orderItem: newOrder.getOrderItems())
+
+        if (newOrder.getOrderItems().size() == oldOrder.getOrderItems().size())
         {
-            orderItemMapper.updateOrderItemByOrderId(id, orderItem.getItemName());
+            for (OrderItem newOderItem: newOrder.getOrderItems())
+            {
+                if ())
+                {
+
+                }
+                orderItemMapper.updateOrderItemByOrderId(orderItem);
+            }
+        }
+        else if (newOrder.getOrderItems().size() > oldOrder.getOrderItems().size())
+        {
+
+        }
+        else
+        {
+
         }
     }
     @Override

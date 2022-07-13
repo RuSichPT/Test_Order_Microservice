@@ -16,11 +16,8 @@
 
     <update id="updateOrderItemByOrderId">
         UPDATE "order_item"
-        SET
-        <foreach collection="items" index="item" separator=", ">
-            SET ITEM_NAME = #{itemName}
-        </foreach>
-        WHERE ORDER_ID = #{order_id}
+        SET ITEM_NAME = #{itemName}
+        WHERE ID = #{id} AND ORDER_ID = #{orderId}
     </update>
 
     <delete id="deleteOrderItemByOrderId">

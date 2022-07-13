@@ -11,8 +11,6 @@ public interface OrderMapper {
 
     Order selectOrder(int id);
 
-    Order selectOrderTest(int id);
-
     void updateOrder(Order order);
 
     void deleteOrder(int id);
