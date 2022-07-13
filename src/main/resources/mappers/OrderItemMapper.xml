@@ -14,9 +14,12 @@
         SELECT * FROM "order_item" WHERE ORDER_ID = #{order_id}
     </select>
 
-    <update id="updateOrderItemByOrderId" >
+    <update id="updateOrderItemByOrderId">
         UPDATE "order_item"
-        SET ITEM_NAME = #{itemName}
+        SET
+        <foreach collection="items" index="item" separator=", ">
+            SET ITEM_NAME = #{itemName}
+        </foreach>
         WHERE ORDER_ID = #{order_id}
     </update>
 

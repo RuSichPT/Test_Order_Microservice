@@ -7,6 +7,9 @@ import com.github.RuSichPT.TestOrderMicroservice.mappers.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -28,20 +31,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order select(int id)
     {
-        Order order = orderMapper.selectOrder(id);
-        if (order != null)
-        {
-            order.setOrderItems(orderItemMapper.selectOrderItemByOrderId(order.getId()));
-        }
-        return order;
+        return orderMapper.selectOrder(id);
     }
 
     @Override
-    public void update(int id, Order order)
+    public void update(int id, Order newOrder)
     {
-        order.setId(id);
-        orderMapper.updateOrder(order);
-        for (OrderItem orderItem: order.getOrderItems())
+        newOrder.setId(id);
+
+        Order oldOrder = orderMapper.selectOrder(id);
+
+        List<OrderItem> list = oldOrder.getOrderItems();
+
+        for ()
+        list.contains()
+
+        orderMapper.updateOrder(newOrder);
+        for (OrderItem orderItem: newOrder.getOrderItems())
         {
             orderItemMapper.updateOrderItemByOrderId(id, orderItem.getItemName());
         }
