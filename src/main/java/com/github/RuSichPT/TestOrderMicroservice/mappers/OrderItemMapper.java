@@ -12,10 +12,14 @@ public interface OrderItemMapper {
 
     void insertOrderItem(String itemName);
 
-    List<OrderItem> selectOrderItemByOrderId(int order_id);
+    void insertOrderItemByOrderId(int orderId, String itemName);
+
+    List<OrderItem> selectOrderItemByOrderId(int orderId);
 
     void updateOrderItemByOrderId(OrderItem orderItem);
 
-    void deleteOrderItemByOrderId(int order_id);
+    void deleteOrderItemByOrderId(int orderId);
+
+    void deleteOrderItem(OrderItem orderItem);
 
 }

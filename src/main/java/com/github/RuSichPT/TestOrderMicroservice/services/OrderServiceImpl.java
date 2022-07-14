@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -45,24 +47,27 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.updateOrder(newOrder);
 
-        if (newOrder.getOrderItems().size() == oldOrder.getOrderItems().size())
-        {
-            for (OrderItem newOderItem: newOrder.getOrderItems())
-            {
-                if ())
-                {
+        List<OrderItem> oldOI = oldOrder.getOrderItems();
+        List<OrderItem> newOI = newOrder.getOrderItems();
 
-                }
-                orderItemMapper.updateOrderItemByOrderId(orderItem);
+        for (OrderItem newOderItem: newOI)
+        {
+            if (isExistingId(oldOI, newOderItem.getId()))
+            {
+                orderItemMapper.updateOrderItemByOrderId(newOderItem);
+            }
+            else
+            {
+                orderItemMapper.insertOrderItemByOrderId(newOrder.getId(), newOderItem.getItemName());
             }
         }
-        else if (newOrder.getOrderItems().size() > oldOrder.getOrderItems().size())
-        {
 
-        }
-        else
+        for (OrderItem oldOderItem: oldOI)
         {
-
+            if (!isExistingId(newOI, oldOderItem.getId()))
+            {
+                orderItemMapper.deleteOrderItem(oldOderItem);
+            }
         }
     }
     @Override
@@ -70,5 +75,18 @@ public class OrderServiceImpl implements OrderService {
     {
         orderItemMapper.deleteOrderItemByOrderId(id);
         orderMapper.deleteOrder(id);
+    }
+
+    private boolean isExistingId(List<OrderItem> orderItemList, int id)
+    {
+        for (OrderItem item: orderItemList)
+        {
+            if (item.getId() == id)
+            {
+                return  true;
+            }
+        }
+
+        return false;
     }
 }

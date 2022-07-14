@@ -9,9 +9,14 @@
         VALUES (NEXTVAL('order_item_seq'), CURRVAL('order_seq'), #{itemName})
     </insert>
 
+    <insert id="insertOrderItemByOrderId">
+        INSERT INTO "order_item"(ID, ORDER_ID, ITEM_NAME)
+        VALUES (NEXTVAL('order_item_seq'), #{orderId}, #{itemName})
+    </insert>
+
     <select id="selectOrderItemByOrderId" parameterType="int"
             resultType="com.github.RuSichPT.TestOrderMicroservice.order.OrderItem">
-        SELECT * FROM "order_item" WHERE ORDER_ID = #{order_id}
+        SELECT * FROM "order_item" WHERE ORDER_ID = #{orderId}
     </select>
 
     <update id="updateOrderItemByOrderId">
@@ -21,7 +26,11 @@
     </update>
 
     <delete id="deleteOrderItemByOrderId">
-        DELETE FROM "order_item" WHERE ORDER_ID = #{order_id}
+        DELETE FROM "order_item" WHERE ORDER_ID = #{orderId}
+    </delete>
+
+    <delete id="deleteOrderItem">
+        DELETE FROM "order_item" WHERE ID = #{id}
     </delete>
 
 </mapper>
