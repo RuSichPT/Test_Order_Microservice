@@ -24,7 +24,12 @@
             SELECT NEXTVAL('ORDER_SEQ')
         </selectKey>
         INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
-        VALUES (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment})
+        VALUES (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
+
+        INSERT INTO "order_item"(ID, ORDER_ID, ITEM_NAME) VALUES
+        <foreach collection="orderItems" item="oi" separator=", ">
+            (NEXTVAL('order_item_seq'), CURRVAL('order_seq'), #{oi.itemName})
+        </foreach>
     </insert>
 
     <select id="selectOrder" parameterType="int" resultMap="OrderMap">
@@ -53,7 +58,8 @@
     </update>
 
     <delete id="deleteOrder" parameterType="int">
-        DELETE FROM "order" WHERE ID = #{id}
+        DELETE FROM "order_item" WHERE ORDER_ID = #{id};
+        DELETE FROM "order" WHERE ID = #{id};
     </delete>
 
 </mapper>

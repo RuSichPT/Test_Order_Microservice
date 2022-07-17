@@ -4,20 +4,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.RuSichPT.TestOrderMicroservice.mappers.OrderItemMapper">
 
-    <insert id="insertOrderItem" parameterType="String">
-        INSERT INTO "order_item"(ID, ORDER_ID, ITEM_NAME)
-        VALUES (NEXTVAL('order_item_seq'), CURRVAL('order_seq'), #{itemName})
+    <insert id="insertOrderItemsByOrderId">
+        INSERT INTO "order_item"(ID, ORDER_ID, ITEM_NAME) VALUES
+        <foreach collection="orderItemList" item="oi" separator=", ">
+            (NEXTVAL('order_item_seq'), #{orderId}, #{oi.itemName})
+        </foreach>
     </insert>
-
-    <insert id="insertOrderItemByOrderId">
-        INSERT INTO "order_item"(ID, ORDER_ID, ITEM_NAME)
-        VALUES (NEXTVAL('order_item_seq'), #{orderId}, #{itemName})
-    </insert>
-
-    <select id="selectOrderItemByOrderId" parameterType="int"
-            resultType="com.github.RuSichPT.TestOrderMicroservice.order.OrderItem">
-        SELECT * FROM "order_item" WHERE ORDER_ID = #{orderId}
-    </select>
 
     <update id="updateOrderItemByOrderId">
         UPDATE "order_item"
@@ -25,12 +17,11 @@
         WHERE ID = #{id} AND ORDER_ID = #{orderId}
     </update>
 
-    <delete id="deleteOrderItemByOrderId">
-        DELETE FROM "order_item" WHERE ORDER_ID = #{orderId}
-    </delete>
-
-    <delete id="deleteOrderItem">
-        DELETE FROM "order_item" WHERE ID = #{id}
+    <delete id="deleteOrderItems">
+        DELETE FROM "order_item" WHERE ID IN
+        <foreach collection="orderItemList" item="oi" open="(" close=")" separator=", ">
+            #{oi.id}
+        </foreach>
     </delete>
 
 </mapper>

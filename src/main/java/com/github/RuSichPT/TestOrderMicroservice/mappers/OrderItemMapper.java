@@ -10,16 +10,10 @@ import java.util.List;
 @Repository
 public interface OrderItemMapper {
 
-    void insertOrderItem(String itemName);
-
-    void insertOrderItemByOrderId(int orderId, String itemName);
-
-    List<OrderItem> selectOrderItemByOrderId(int orderId);
+    void insertOrderItemsByOrderId(int orderId, List<OrderItem> orderItemList);
 
     void updateOrderItemByOrderId(OrderItem orderItem);
 
-    void deleteOrderItemByOrderId(int orderId);
-
-    void deleteOrderItem(OrderItem orderItem);
+    void deleteOrderItems(List<OrderItem> orderItemList);
 
 }

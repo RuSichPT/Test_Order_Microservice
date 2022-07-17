@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -23,10 +25,6 @@ public class OrderServiceImpl implements OrderService {
     public void insert(Order order)
     {
         orderMapper.insertOrder(order);
-        for (OrderItem orderItem: order.getOrderItems())
-        {
-            orderItemMapper.insertOrderItem(orderItem.getItemName());
-        }
     }
 
     @Override
@@ -47,46 +45,41 @@ public class OrderServiceImpl implements OrderService {
 
         orderMapper.updateOrder(newOrder);
 
-        List<OrderItem> oldOI = oldOrder.getOrderItems();
-        List<OrderItem> newOI = newOrder.getOrderItems();
+        ArrayList<OrderItem> oldOI = (ArrayList<OrderItem>) oldOrder.getOrderItems();
+        ArrayList<OrderItem> newOI = (ArrayList<OrderItem>) newOrder.getOrderItems();
 
         for (OrderItem newOderItem: newOI)
         {
-            if (isExistingId(oldOI, newOderItem.getId()))
+            OrderItem oldOrderItem = isExistingId(oldOI, newOderItem.getId());
+            if (oldOrderItem != null)
             {
                 orderItemMapper.updateOrderItemByOrderId(newOderItem);
-            }
-            else
-            {
-                orderItemMapper.insertOrderItemByOrderId(newOrder.getId(), newOderItem.getItemName());
+                oldOI.remove(oldOrderItem);
+                newOI.remove(newOderItem);
             }
         }
 
-        for (OrderItem oldOderItem: oldOI)
-        {
-            if (!isExistingId(newOI, oldOderItem.getId()))
-            {
-                orderItemMapper.deleteOrderItem(oldOderItem);
-            }
-        }
+        orderItemMapper.insertOrderItemsByOrderId(newOrder.getId(), newOI);
+        orderItemMapper.deleteOrderItems(oldOI);
     }
     @Override
     public void delete(int id)
     {
-        orderItemMapper.deleteOrderItemByOrderId(id);
         orderMapper.deleteOrder(id);
     }
 
-    private boolean isExistingId(List<OrderItem> orderItemList, int id)
+    private OrderItem isExistingId(List<OrderItem> orderItemList, int id)
     {
         for (OrderItem item: orderItemList)
         {
             if (item.getId() == id)
             {
-                return  true;
+                return item;
             }
         }
 
-        return false;
+        return null;
     }
+
+
 }
