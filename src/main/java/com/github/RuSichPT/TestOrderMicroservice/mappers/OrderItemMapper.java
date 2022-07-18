@@ -12,7 +12,7 @@ public interface OrderItemMapper {
 
     void insertOrderItemsByOrderId(int orderId, List<OrderItem> orderItemList);
 
-    void updateOrderItemByOrderId(OrderItem orderItem);
+    void updateOrderItems(List<OrderItem> orderItemList);
 
     void deleteOrderItems(List<OrderItem> orderItemList);
 

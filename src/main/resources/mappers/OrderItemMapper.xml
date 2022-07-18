@@ -11,10 +11,15 @@
         </foreach>
     </insert>
 
-    <update id="updateOrderItemByOrderId">
-        UPDATE "order_item"
-        SET ITEM_NAME = #{itemName}
-        WHERE ID = #{id} AND ORDER_ID = #{orderId}
+    <update id="updateOrderItems">
+        UPDATE "order_item" as tab
+        SET ITEM_NAME = val.ITEM_NAME
+        FROM (VALUES
+        <foreach collection="orderItemList" item="oi" separator=", ">
+            (#{oi.id}, #{oi.itemName}, #{oi.orderId})
+        </foreach>
+        ) as val(ID, ITEM_NAME, ORDER_ID)
+        WHERE tab.ID = val.ID AND tab.ORDER_ID = val.ORDER_ID;
     </update>
 
     <delete id="deleteOrderItems">

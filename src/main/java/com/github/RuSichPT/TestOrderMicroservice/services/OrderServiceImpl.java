@@ -47,20 +47,32 @@ public class OrderServiceImpl implements OrderService {
 
         ArrayList<OrderItem> oldOI = (ArrayList<OrderItem>) oldOrder.getOrderItems();
         ArrayList<OrderItem> newOI = (ArrayList<OrderItem>) newOrder.getOrderItems();
+        ArrayList<OrderItem> copyNewOI = new ArrayList<>(newOI);
+        ArrayList<OrderItem> copyOldOI= new ArrayList<>(oldOI);
+        ArrayList<OrderItem> updatedOI = new ArrayList<>();
 
-        for (OrderItem newOderItem: newOI)
+        for (OrderItem newOderItem: copyNewOI)
         {
-            OrderItem oldOrderItem = isExistingId(oldOI, newOderItem.getId());
+            OrderItem oldOrderItem = isExistingId(copyOldOI, newOderItem.getId());
             if (oldOrderItem != null)
             {
-                orderItemMapper.updateOrderItemByOrderId(newOderItem);
+                updatedOI.add(newOderItem);
                 oldOI.remove(oldOrderItem);
                 newOI.remove(newOderItem);
             }
         }
-
-        orderItemMapper.insertOrderItemsByOrderId(newOrder.getId(), newOI);
-        orderItemMapper.deleteOrderItems(oldOI);
+        if (!updatedOI.isEmpty())
+        {
+           orderItemMapper.updateOrderItems(updatedOI);
+        }
+        if (!newOI.isEmpty())
+        {
+            orderItemMapper.insertOrderItemsByOrderId(newOrder.getId(), newOI);
+        }
+        if (!oldOI.isEmpty())
+        {
+            orderItemMapper.deleteOrderItems(oldOI);
+        }
     }
     @Override
     public void delete(int id)
