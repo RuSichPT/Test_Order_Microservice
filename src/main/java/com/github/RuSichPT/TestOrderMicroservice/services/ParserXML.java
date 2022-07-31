@@ -1,60 +1,59 @@
-//package com.github.RuSichPT.TestOrderMicroservice.services;
-//
-//import com.github.RuSichPT.TestOrderMicroservice.order.Order;
-//import org.w3c.dom.Document;
-//import org.w3c.dom.Node;
-//import org.w3c.dom.NodeList;
-//
-//import javax.xml.parsers.DocumentBuilder;
-//import javax.xml.parsers.DocumentBuilderFactory;
-//import java.io.File;
-//
-//public class ParserXML
-//{
-//    private Order order;
-//    private Command command;
-//
-//    public Order getOrder() {
-//        return order;
-//    }
-//
-//    public ParserXML(String path)
-//    {
-//        try {
-//            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-//            Document doc = db.parse(new File(path));
-//
-//            NodeList orderNodeList = doc.getElementsByTagName("order");
-//
-//            for (int i = 0; i < orderNodeList.getLength(); i++)
-//            {
-//                Node orderNode = orderNodeList.item(i);
-//                orderNode.
-//            }
-//
-//            Node root = doc.getDocumentElement();
-//            NodeList messages = root.getChildNodes();
-//
-//            for (int i = 0; i < messages.getLength(); i++)
-//            {
-//                Node message = messages.item(i);
-//                if (message.getNodeType() != Node.TEXT_NODE)
-//                {
-//                    NodeList commands = message.getChildNodes();
-//                    for (int j = 0; j < properties.getLength(); j++)
-//                    {
-//                        Node property = properties.item(j);
-//                        if (property.getNodeType() != Node.TEXT_NODE)
-//                        {
-//                            patient.fillProperty(property);
-//                        }
-//                    }
-//                    patients.add(patient);
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//}
+package com.github.RuSichPT.TestOrderMicroservice.services;
+
+import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+
+public class ParserXML
+{
+    private Order order;
+    private Command command;
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public ParserXML(Document doc) throws RuntimeException
+    {
+        order = new Order();
+        NodeList commandNodeList = doc.getElementsByTagName("command");
+
+        try
+        {
+            command = Command.toCommand(commandNodeList.item(0).getTextContent());
+
+            NodeList orderNodeList = doc.getElementsByTagName("order");
+
+            for (int c0 = 0; c0 < orderNodeList.getLength(); c0++)
+            {
+                Node orderNode = orderNodeList.item(c0);
+                if (orderNode.getNodeType() != Node.TEXT_NODE)
+                {
+                    NodeList properties = orderNode.getChildNodes();
+                    for (int c1 = 0; c1 < properties.getLength(); c1++)
+                    {
+                        Node property = properties.item(c1);
+                        if (property.getNodeType() != Node.TEXT_NODE)
+                        {
+                            order.fillProperty(property);
+                        }
+                    }
+                }
+            }
+        } catch (RuntimeException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+}

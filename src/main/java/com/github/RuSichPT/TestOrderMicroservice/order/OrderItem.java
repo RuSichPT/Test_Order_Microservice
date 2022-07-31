@@ -30,4 +30,13 @@ public class OrderItem {
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", itemName='" + itemName + '\'' +
+                '}';
+    }
 }
