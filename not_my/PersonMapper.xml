@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ru.medexpert.server.db.mappers.PersonMapper">
+
+    <resultMap id="personHeavyMap" type="ru.medexpert.shared.beans.PersonHeavyBean">
+        <result property="id" column="ID"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="midName" column="MID_NAME"/>
+        <result property="lastName" column="LAST_NAME"/>
+        <result property="phone1" column="PHONE1"/>
+        <result property="phone2" column="PHONE2"/>
+        <result property="phone3" column="PHONE3"/>
+        <result property="email" column="EMAIL"/>
+        <result property="email2" column="EMAIL2"/>
+        <result property="genderId" column="GENDER_ID"/>
+        <result property="notePhone1" column="NOTE_PHONE1"/>
+        <result property="notePhone2" column="NOTE_PHONE2"/>
+        <result property="notePhone3" column="NOTE_PHONE3"/>
+        <result property="firstNameEng" column="FIRST_NAME_ENGLISH"/>
+        <result property="midNameEng" column="MIDDLE_NAME_ENGLISH"/>
+        <result property="lastNameEng" column="LAST_NAME_ENGLISH"/>
+        <result property="version" column="VERSION"/>
+        <association property="birthDate" resultMap="medexDateMap" columnPrefix="BIRTHDAY_"/>
+        <collection property="addressList" resultMap="ru.medexpert.server.db.mappers.AddressMapper.AddressMap" columnPrefix="adr_"/>
+        <collection property="officialPaperList" resultMap="ru.medexpert.server.db.mappers.OfficialPaperMapper.officialPaperMap" columnPrefix="opr_"/>           
+    </resultMap>
+    
+    <resultMap id="personLiteMap" type="ru.medexpert.shared.beans.PersonLiteBean">
+        <result property="id" column="ID"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="midName" column="MID_NAME"/>
+        <result property="lastName" column="LAST_NAME"/>
+        <result property="phone" column="PHONE"/>
+        <result property="genderId" column="GENDER_ID"/>
+        <association property="birthDate" resultMap="medexDateMap" columnPrefix="BIRTHDAY_"/>
+        <collection property="addressList" resultMap="ru.medexpert.server.db.mappers.AddressMapper.AddressMap" columnPrefix="adr_"/>
+    </resultMap>
+    
+    <resultMap id="medexDateMap" type="ru.medexpert.shared.util.date.MedexDate">
+      <result property="year" column="YEAR"/>
+      <result property="month" column="MONTH"/>
+      <result property="day" column="DAY"/>
+    </resultMap>
+    
+    <insert id="insertPerson" keyColumn="id" keyProperty="id" parameterType="ru.medexpert.shared.beans.PersonHeavyBean">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">SELECT nextval('PERSON_SEQ') </selectKey>
+        INSERT INTO PERSON (ID, FIRST_NAME, MID_NAME, LAST_NAME, SEARCH_PATTERN, 
+                            BIRTHDAY_YEAR, BIRTHDAY_MONTH, BIRTHDAY_DAY,
+                            PHONE1, PHONE2, PHONE3, NOTE_PHONE1, NOTE_PHONE2, NOTE_PHONE3,
+                            EMAIL, EMAIL2, GENDER_ID,  
+                            FIRST_NAME_ENGLISH, MIDDLE_NAME_ENGLISH, LAST_NAME_ENGLISH,
+                            VERSION)
+        VALUES (#{id}, #{firstName}, #{midName}, #{lastName}, #{searchPattern}, 
+                #{birthDate.year}, #{birthDate.month}, #{birthDate.day},
+                #{phone1}, #{phone2}, #{phone3}, #{notePhone1}, #{notePhone2}, #{notePhone3},
+                #{email}, #{email2}, #{genderId},
+                #{firstNameEng},#{midNameEng},#{lastNameEng},
+                #{version})
+    </insert>
+
+    <update id="updatePerson" parameterType="ru.medexpert.shared.beans.PersonHeavyBean">
+        UPDATE PERSON 
+           SET FIRST_NAME=#{firstName}, 
+               MID_NAME=#{midName}, 
+               LAST_NAME=#{lastName}, 
+               SEARCH_PATTERN=#{searchPattern}, 
+               PHONE1=#{phone1}, 
+               PHONE2=#{phone2}, 
+               PHONE3=#{phone3}, 
+               EMAIL=#{email}, 
+               EMAIL2=#{email2}, 
+               GENDER_ID=#{genderId}, 
+               NOTE_PHONE1=#{notePhone1}, 
+               NOTE_PHONE2=#{notePhone2},
+               NOTE_PHONE3=#{notePhone3}, 
+               FIRST_NAME_ENGLISH=#{firstNameEng}, 
+               MIDDLE_NAME_ENGLISH=#{midNameEng}, 
+               LAST_NAME_ENGLISH=#{lastNameEng},
+               VERSION = #{version},
+               BIRTHDAY_YEAR = #{birthDate.year},
+               BIRTHDAY_MONTH = #{birthDate.month},
+               BIRTHDAY_DAY = #{birthDate.day}
+        WHERE ID = #{id}
+    </update>
+    
+    <update id="updatePersonHash">
+    UPDATE PERSON 
+           SET HASH_LOCAL=#{hashLocal}, 
+               HASH_ENG=#{hashEng}
+           WHERE ID = #{personId}
+    </update>
+    
+    <update id="updateOldPersonTrack">
+        UPDATE PERSON_TRACK
+        SET IS_LAST = 0
+        WHERE PERSON_ID = #{personId}
+    </update>
+    
+    <insert id="insertPersonTrack">
+     INSERT INTO PERSON_TRACK (ID, PERSON_ID, FIRST_NAME_OLD, MIDDLE_NAME_OLD, 
+                                LAST_NAME_OLD, FIRST_NAME_ENGLISH_OLD, MIDDLE_NAME_ENGLISH_OLD, LAST_NAME_ENGLISH_OLD, 
+                                BIRTHDAY_OLD_YEAR, BIRTHDAY_OLD_MONTH, BIRTHDAY_OLD_DAY,
+                                FIRST_NAME_NEW, MIDDLE_NAME_NEW, LAST_NAME_NEW,
+                                FIRST_NAME_ENGLISH_NEW, MIDDLE_NAME_ENGLISH_NEW, LAST_NAME_ENGLISH_NEW,
+                                BIRTHDAY_NEW_YEAR, BIRTHDAY_NEW_MONTH, BIRTHDAY_NEW_DAY,
+                                STAFF_ID_CHANGE, ROLE_ID_CHANGE, WORK_NODE_ID_CHANGE, TIME_CHANGE, IS_LAST, SEARCH_PATTERN,
+                                VERSION_OLD, VERSION_NEW)
+     VALUES (nextval('PERSON_TRACK_SEQ'), #{personNew.id}, #{personOld.firstName}, #{personOld.midName}, 
+             #{personOld.lastName}, #{personOld.firstNameEng}, #{personOld.midNameEng}, #{personOld.lastNameEng}, 
+             #{personOld.birthDate.year}, #{personOld.birthDate.month}, #{personOld.birthDate.day}, 
+             #{personNew.firstName}, #{personNew.midName}, #{personNew.lastName}, 
+             #{personNew.firstNameEng}, #{personNew.midNameEng}, #{personNew.lastNameEng}, 
+             #{personNew.birthDate.year}, #{personNew.birthDate.month}, #{personNew.birthDate.day}, 
+             #{staffId}, #{staffRoleId}, #{workNode.id}, CURRENT_TIMESTAMP, 1, #{searchPattern},
+             #{personOld.version}, #{personNew.version})
+    </insert>
+    
+    <select id="getLastPersonTrackIdByPersonId" resultType="int">
+        SELECT ID
+        FROM PERSON_TRACK
+        WHERE PERSON_ID = #{personId} 
+          AND IS_LAST = 1
+    </select>
+    
+    <resultMap id="personSuggestMap" type="ru.medexpert.shared.beans.PersonSuggestBean">
+        <result property="id" column="ID"/>
+        <result property="firstName" column="FIRST_NAME"/>
+        <result property="midName" column="MID_NAME"/>
+        <result property="lastName" column="LAST_NAME"/>
+        <result property="phone" column="PHONE"/>
+        <result property="isLast" column="IS_LAST"/>
+        <result property="genderId" column="GENDER_ID"/>
+        <association property="birthDate" resultMap="medexDateMap" columnPrefix="BIRTHDAY_"/>
+        <association property="patientBean" resultMap="patientSuggestMap" columnPrefix="pat_"/>
+        <association property="staffBean" resultMap="staffSuggestMap" columnPrefix="staff_"/>
+        <collection property="addressList" resultMap="ru.medexpert.server.db.mappers.AddressMapper.AddressMap" columnPrefix="adr_"/>
+    </resultMap>
+    
+    <resultMap id="patientSuggestMap" type="ru.medexpert.shared.beans.PatientSuggestBean">
+        <result property="id" column="ID"/>
+        <result property="pid" column="PID"/>
+        <result property="registration" column="REGISTRATION_DATE"/>
+        <result property="isConfirmed" column="IS_CONFIRMED"/>
+        <result property="haveVisit" column="HAVE_VISIT"/>
+        <result property="needCheck" column="NEED_CHECK"/>
+    </resultMap>
+    
+    <resultMap id="staffSuggestMap" type="ru.medexpert.shared.beans.StaffSuggestBean">
+        <result property="id" column="ID"/>
+    </resultMap>
+    
+    <select id="getSuggestReceptionPersonPatient" resultMap="personSuggestMap">
+    <![CDATA[
+    SELECT finRes.PERSON_ID AS ID, 
+           pers.LAST_NAME,
+           pers.FIRST_NAME,
+           pers.MID_NAME,
+           pers.BIRTHDAY_YEAR AS BIRTHDAY_YEAR,
+           pers.BIRTHDAY_MONTH AS BIRTHDAY_MONTH,
+           pers.BIRTHDAY_DAY AS BIRTHDAY_DAY,
+           pers.PHONE1 AS PHONE,
+           finRes.IS_LAST AS IS_LAST,
+           adr.ID AS adr_ID,
+           adr.CITY_ID AS adr_c_ID,
+           adr_d.ID AS adr_c_d_ID,
+           adr_d.NAME AS adr_c_d_NAME,
+           adr_lnk.ADDRESS_TYPE_ID AS adr_ADDRESS_TYPE_ID,
+           pat.ID AS pat_ID,
+           pat.PID AS pat_PID
+    FROM
+        (SELECT res.PERSON_ID AS PERSON_ID,
+                res.GENERAL_ORDER,
+                MAX(res.IS_LAST) AS IS_LAST
+        FROM
+               (
+                    (SELECT pers.ID AS PERSON_ID,
+                            pt.LAST_NAME_NEW,
+                            pt.FIRST_NAME_NEW,
+                            pt.MIDDLE_NAME_NEW,
+                            1 AS GENERAL_ORDER,
+                            pt.IS_LAST AS IS_LAST
+                    FROM PERSON_TRACK pt
+                    INNER JOIN PERSON pers ON pt.PERSON_ID = pers.ID 
+                    INNER JOIN ADDRESS_LINK adr_lnk ON adr_lnk.PERSON_ID = pers.ID 
+                    INNER JOIN ADDRESS adr ON adr.ID = adr_lnk.ADDRESS_ID 
+                    INNER JOIN CITY adr_c ON adr_c.ID = adr.CITY_ID
+                    WHERE 1 = 1
+                      ${searchCondition}
+                      AND adr_c.DISTRICT_ID = #{searchBean.districtId} )
+                UNION
+                    (SELECT pers.ID AS PERSON_ID,
+                            pt.LAST_NAME_NEW,
+                            pt.FIRST_NAME_NEW,
+                            pt.MIDDLE_NAME_NEW,
+                            2 AS GENERAL_ORDER,
+                            pt.IS_LAST AS IS_LAST
+                    FROM PERSON_TRACK pt
+                    INNER JOIN PERSON pers ON pt.PERSON_ID = pers.ID 
+                    INNER JOIN ADDRESS_LINK adr_lnk ON adr_lnk.PERSON_ID = pers.ID  
+                    INNER JOIN ADDRESS adr ON adr.ID = adr_lnk.ADDRESS_ID 
+                    INNER JOIN CITY adr_c ON adr_c.ID = adr.CITY_ID
+                    WHERE 1 = 1
+                      ${searchCondition}
+                      AND adr_c.DISTRICT_ID <> #{searchBean.districtId})
+                UNION
+                    (SELECT pers.ID AS PERSON_ID,
+                            pt.LAST_NAME_NEW,
+                            pt.FIRST_NAME_NEW,
+                            pt.MIDDLE_NAME_NEW,
+                            3 AS GENERAL_ORDER,
+                            pt.IS_LAST AS IS_LAST
+                    FROM PERSON_TRACK pt
+                    INNER JOIN PERSON pers ON pt.PERSON_ID = pers.ID  
+                    LEFT JOIN ADDRESS_LINK adr_lnk ON adr_lnk.PERSON_ID = pers.ID 
+                    LEFT JOIN ADDRESS adr ON adr.ID = adr_lnk.ADDRESS_ID
+                    WHERE 1 = 1
+                      ${searchCondition}
+                      AND adr.CITY_ID IS NULL)
+                LIMIT 250
+            ) AS res
+        GROUP BY res.PERSON_ID, res.GENERAL_ORDER, res.LAST_NAME_NEW, res.FIRST_NAME_NEW, res.MIDDLE_NAME_NEW
+        ORDER BY res.GENERAL_ORDER, res.LAST_NAME_NEW, res.FIRST_NAME_NEW, res.MIDDLE_NAME_NEW
+        LIMIT #{searchBean.limit}) AS finRes
+    INNER JOIN PERSON pers ON finRes.PERSON_ID = pers.ID
+    LEFT JOIN PATIENT pat ON pat.PERSON_ID = pers.ID 
+    LEFT JOIN ADDRESS_LINK adr_lnk ON adr_lnk.PERSON_ID = pers.ID 
+    LEFT JOIN ADDRESS adr ON adr.ID = adr_lnk.ADDRESS_ID
+    LEFT JOIN CITY adr_c ON adr_c.ID = adr.CITY_ID 
+    LEFT JOIN DISTRICT adr_d ON adr_d.ID = adr_c.DISTRICT_ID
+    ]]>
+    </select>
+    
+    <select id="getPersonNameHistory" resultMap="personSuggestMap">
+    <![CDATA[
+    (
+         SELECT pt.PERSON_ID as ID, 
+                pt.LAST_NAME_NEW AS LAST_NAME, 
+                pt.FIRST_NAME_NEW AS FIRST_NAME, 
+                pt.MIDDLE_NAME_NEW AS MID_NAME,
+                pt.BIRTHDAY_NEW_YEAR AS BIRTHDAY_YEAR,
+                pt.BIRTHDAY_NEW_MONTH AS BIRTHDAY_MONTH,
+                pt.BIRTHDAY_NEW_DAY AS BIRTHDAY_DAY,
+                pers.PHONE1 AS PHONE,
+                pt.IS_LAST AS IS_LAST,
+                adr.ID AS adr_ID,
+                adr.CITY_ID AS adr_c_ID,
+                adr_d.ID AS adr_c_d_ID,
+                adr_d.NAME AS adr_c_d_NAME,
+                adr_lnk.ADDRESS_TYPE_ID AS adr_ADDRESS_TYPE_ID,
+                pat.ID AS pat_ID,
+                pat.PID AS pat_PID
+        FROM PERSON_TRACK pt
+        INNER JOIN PERSON pers ON pt.PERSON_ID = pers.ID
+        LEFT JOIN ADDRESS_LINK adr_lnk ON adr_lnk.PERSON_ID = pers.ID 
+        LEFT JOIN ADDRESS adr ON adr.ID = adr_lnk.ADDRESS_ID
+        LEFT JOIN CITY adr_c ON adr_c.ID = adr.CITY_ID 
+        LEFT JOIN DISTRICT adr_d ON adr_d.ID = adr_c.DISTRICT_ID
+        LEFT JOIN PATIENT pat ON pat.PERSON_ID = pers.ID 
+        WHERE pt.IS_LAST = 1
+          AND pt.PERSON_ID = #{personId}
+    )
+    UNION ALL
+    (
+       SELECT pt.PERSON_ID as ID, 
+              pt.LAST_NAME_NEW AS LAST_NAME, 
+              pt.FIRST_NAME_NEW AS FIRST_NAME, 
+              pt.MIDDLE_NAME_NEW AS MID_NAME,
+              0 AS BIRTHDAY_YEAR,
+              0 AS BIRTHDAY_MONTH,
+              0 AS BIRTHDAY_DAY,
+              NULL AS PHONE, 
+              pt.IS_LAST AS IS_LAST,
+              NULL AS adr_ID,
+              NULL AS adr_c_ID,
+              NULL AS adr_c_d_ID,
+              NULL AS adr_c_d_NAME,
+              NULL AS adr_ADDRESS_TYPE_ID,
+              NULL AS pat_ID,
+              NULL AS pat_PID
+        FROM PERSON_TRACK pt
+        INNER JOIN PERSON pers ON pt.PERSON_ID = pers.ID
+        WHERE ((pt.LAST_NAME_OLD IS NULL AND pt.LAST_NAME_NEW IS NOT NULL) 
+                OR (pt.MIDDLE_NAME_OLD IS NULL AND pt.MIDDLE_NAME_NEW IS NOT NULL) 
+                OR (pt.FIRST_NAME_OLD IS NULL AND pt.FIRST_NAME_NEW IS NOT NULL)
+                OR (pt.LAST_NAME_NEW IS NULL AND pt.LAST_NAME_OLD IS NOT NULL) 
+                OR (pt.MIDDLE_NAME_NEW IS NULL AND pt.MIDDLE_NAME_OLD IS NOT NULL) 
+                OR (pt.FIRST_NAME_NEW IS NULL AND pt.FIRST_NAME_OLD IS NOT NULL)
+                OR pt.LAST_NAME_NEW <> pt.LAST_NAME_OLD
+                OR pt.FIRST_NAME_NEW <> pt.FIRST_NAME_OLD
+                OR pt.MIDDLE_NAME_NEW <> pt.MIDDLE_NAME_OLD)
+          AND pt.IS_LAST = 0
+          AND pt.PERSON_ID = #{personId}
+        ORDER BY pt.TIME_CHANGE DESC
+        LIMIT 6
+    )
+    ]]>
+    </select>
+    
+    <select id="getSuggestStaff" resultMap="personSuggestMap">
+        SELECT pers.ID,
+               pers.LAST_NAME,
+               pers.FIRST_NAME,
+               pers.MID_NAME,
+               st.ID AS staff_ID
+        FROM PERSON pers
+        INNER JOIN STAFF st ON pers.ID = st.PERSON_ID 
+        LEFT JOIN STAFF_USERROLE sr ON st.ID = sr.STAFF_ID
+        LEFT JOIN USER_ROLE r ON r.ID = sr.USER_ROLE_ID
+        LEFT JOIN STAFF_COMPANY_POSITION_LINK cpl ON cpl.ID = sr.STAFF_COMPANY_POSITION_LINK_ID 
+        LEFT JOIN COMPANY_GROUP_COMPANY_LINK cgcl ON cgcl.COMPANY_ID = cpl.COMPANY_ID 
+        LEFT JOIN STAFF_COMPANY_POSITION_LINK_DC_LINK dl ON cpl.ID = dl.STAFF_COMPANY_POSITION_LINK_ID
+        WHERE 1 = 1
+            ${searchCondition}
+        GROUP BY st.ID, pers.ID, pers.LAST_NAME, pers.FIRST_NAME, pers.MID_NAME 
+        ORDER BY pers.LAST_NAME, pers.FIRST_NAME, pers.MID_NAME
+        LIMIT 5
+    </select>
+    
+    <select id="getSuggestPerson" resultMap="personSuggestMap">
+        SELECT pers.ID,
+               pers.LAST_NAME,
+               pers.FIRST_NAME,
+               pers.MID_NAME,
+               pat.ID AS pat_ID,
+               pat.PID AS pat_PID,
+               st.ID AS staff_ID
+        FROM PERSON pers
+        LEFT JOIN PATIENT pat ON pat.PERSON_ID = pers.ID 
+        LEFT JOIN STAFF st ON st.PERSON_ID  = pers.ID 
+        WHERE 1 = 1
+              ${searchCondition}
+        ORDER BY pers.LAST_NAME, pers.FIRST_NAME, pers.MID_NAME, st.ID, pat.PID
+        LIMIT #{searchBean.limit}
+    </select>
+    
+    <select id="getPersonHeavyBean" resultMap="personHeavyMap">
+        SELECT pers.ID,
+               COALESCE(pt.FIRST_NAME_NEW, pers.FIRST_NAME) AS FIRST_NAME,
+               COALESCE(pt.MIDDLE_NAME_NEW, pers.MID_NAME) AS MID_NAME,
+               COALESCE(pt.LAST_NAME_NEW, pers.LAST_NAME) AS LAST_NAME,
+               pers.BIRTHDAY_YEAR,
+               pers.BIRTHDAY_MONTH,
+               pers.BIRTHDAY_DAY,
+               pers.PHONE1,
+               pers.PHONE2,
+               pers.PHONE3,
+               pers.EMAIL,
+               pers.EMAIL2,
+               pers.GENDER_ID,
+               pers.NOTE_PHONE1,
+               pers.NOTE_PHONE2,
+               pers.NOTE_PHONE3,
+               COALESCE(pt.FIRST_NAME_ENGLISH_NEW, pers.FIRST_NAME_ENGLISH) AS FIRST_NAME_ENGLISH,
+               COALESCE(pt.MIDDLE_NAME_ENGLISH_NEW, pers.MIDDLE_NAME_ENGLISH) AS MIDDLE_NAME_ENGLISH,
+               COALESCE(pt.LAST_NAME_ENGLISH_NEW, pers.LAST_NAME_ENGLISH) AS LAST_NAME_ENGLISH,
+               pers.VERSION AS VERSION,
+               adr.ID AS adr_ID,
+               adr.STREET AS adr_STREET,
+               adr.HOUSE AS adr_HOUSE,
+               adr.APARTMENT_OFFICE_NUMBER AS adr_APARTMENT_OFFICE_NUMBER,
+               adr.ADDITIONAL_INFO AS adr_ADDITIONAL_INFO,
+               adr_lnk.ADDRESS_TYPE_ID AS adr_ADDRESS_TYPE_ID,
+               adr_c.ID AS adr_c_ID,
+               adr_c.NAME AS adr_c_NAME,
+               adr_c.PREFIX AS adr_c_PREFIX,
+               adr_c.DISTRICT_ID AS adr_c_DISTRICT_ID,
+               adr.GOOGLE_PLACE_ID AS adr_GOOGLE_PLACE_ID,
+               adr.GOOGLE_REQUEST AS adr_GOOGLE_REQUEST,
+               adr.LOCATION_LATITUDE AS adr_LOCATION_LATITUDE,
+               adr.LOCATION_LONGITUDE AS adr_LOCATION_LONGITUDE
+        FROM PERSON pers
+        LEFT JOIN PATIENT pat ON pat.PERSON_ID = pers.ID
+        LEFT JOIN PATIENT_VISIT pv ON pv.PATIENT_ID = pat.ID AND pv.ID = #{visitId} 
+        LEFT JOIN PERSON_TRACK pt ON pt.ID = pv.PERSON_TRACK_ID
+        LEFT JOIN ADDRESS_LINK adr_lnk ON adr_lnk.PERSON_ID = pers.ID
+        LEFT JOIN ADDRESS adr ON adr.ID = adr_lnk.ADDRESS_ID 
+        LEFT JOIN CITY adr_c ON adr_c.ID = adr.CITY_ID 
+        WHERE pers.ID = #{personId}
+        ORDER BY adr_lnk.ADDRESS_TYPE_ID, adr_c.NAME, adr.STREET, adr.HOUSE
+    </select>
+    
+    <select id="getPersonSuggestByPersonId" resultMap="personSuggestMap">
+        SELECT pers.ID,
+               pers.LAST_NAME,
+               pers.FIRST_NAME,
+               pers.MID_NAME,
+               pat.ID AS pat_ID,
+               pat.PID AS pat_PID,
+               st.ID AS staff_ID
+        FROM PERSON pers
+        LEFT JOIN PATIENT pat ON pat.PERSON_ID = pers.ID 
+        LEFT JOIN STAFF st ON st.PERSON_ID  = pers.ID 
+        WHERE pers.ID = #{personId}
+    </select>
+    
+    <select id="getSuggestPatient" resultMap="personSuggestMap">
+        SELECT pers.ID,
+               pt.LAST_NAME_NEW AS LAST_NAME,
+               pt.FIRST_NAME_NEW AS FIRST_NAME, 
+               pt.MIDDLE_NAME_NEW AS MID_NAME,
+               pers.BIRTHDAY_YEAR AS BIRTHDAY_YEAR,
+               pers.BIRTHDAY_MONTH AS BIRTHDAY_MONTH,
+               pers.BIRTHDAY_DAY AS BIRTHDAY_DAY,
+               pers.PHONE1 AS PHONE,
+               adr.ID AS adr_ID,
+               adr.CITY_ID AS adr_c_ID,
+               adr_d.ID AS adr_c_d_ID,
+               adr_d.NAME AS adr_c_d_NAME,
+               adr_lnk.ADDRESS_TYPE_ID AS adr_ADDRESS_TYPE_ID,
+               pt.IS_LAST AS IS_LAST,
+               pat.ID AS pat_ID,
+               pat.PID AS pat_PID
+        FROM PERSON_TRACK pt
+        INNER JOIN PERSON pers ON pt.PERSON_ID = pers.ID
+        INNER JOIN PATIENT pat ON pat.PERSON_ID = pers.ID 
+        INNER JOIN (SELECT tt.TRACK_ID,
+                           tt.PERSON_ID,
+                           tt.PATIENT_ID
+                    FROM 
+                    (SELECT pt.ID AS TRACK_ID,
+                           pt.PERSON_ID,
+                           NULL AS PATIENT_ID
+                    FROM PERSON_TRACK pt
+                    WHERE pt.SEARCH_PATTERN LIKE UPPER(#{searchBean.suggestText}) || '%'
+                    UNION 
+                    SELECT NULL AS TRACK_ID,
+                           pat.PERSON_ID ,
+                           pat.ID AS PATIENT_ID
+                    FROM PATIENT pat
+                    WHERE pat.PID LIKE UPPER(#{searchBean.suggestText})
+                    ) tt) dat ON dat.PERSON_ID = pers.ID 
+                             AND (dat.TRACK_ID IS NOT NULL AND dat.TRACK_ID = pt.ID 
+                                   OR dat.TRACK_ID IS NULL AND dat.PATIENT_ID = pat.ID)
+        LEFT JOIN ADDRESS_LINK adr_lnk ON adr_lnk.PERSON_ID = pers.ID AND adr_lnk.ADDRESS_TYPE_ID = 1
+        LEFT JOIN ADDRESS adr ON adr.ID = adr_lnk.ADDRESS_ID
+        LEFT JOIN CITY adr_c ON adr_c.ID = adr.CITY_ID 
+        LEFT JOIN DISTRICT adr_d ON adr_d.ID = adr_c.DISTRICT_ID
+        ORDER BY pt.LAST_NAME_NEW, pt.FIRST_NAME_NEW, pt.MIDDLE_NAME_NEW,
+                 pers.BIRTHDAY_YEAR, pers.BIRTHDAY_MONTH, pers.BIRTHDAY_DAY
+        LIMIT #{searchBean.limit}
+    </select>
+    
+    <select id="checkPersonPhone" resultType="boolean">
+    SELECT LEAST (1, count(*))
+    FROM PERSON pers
+    WHERE pers.ID = #{personId}
+       AND (pers.PHONE1 = #{phone}
+            OR pers.PHONE2 = #{phone}
+            OR pers.PHONE3 = #{phone})
+    </select>
+    
+    <select id="getPatientsForControlPlus" resultMap="personSuggestMap">
+    <![CDATA[
+        SELECT pers.ID AS ID,
+               p.PID AS pat_PID,
+               p.REGISTRATION_DATE AS pat_REGISTRATION_DATE,
+               p.IS_CONFIRMED AS pat_IS_CONFIRMED,
+               p.NEED_CHECK AS pat_NEED_CHECK,
+               p.ID AS pat_ID,
+               pers.LAST_NAME AS LAST_NAME,
+               pers.FIRST_NAME AS FIRST_NAME,
+               pers.MID_NAME AS MID_NAME,
+               pers.GENDER_ID AS GENDER_ID,
+               pers.BIRTHDAY_YEAR AS BIRTHDAY_YEAR,
+               pers.BIRTHDAY_MONTH AS BIRTHDAY_MONTH,
+               pers.BIRTHDAY_DAY AS BIRTHDAY_DAY
+        FROM PATIENT p
+        INNER JOIN PERSON pers ON pers.ID = p.PERSON_ID
+        WHERE 1=1
+            ${searchCondition}
+        ORDER BY p.REGISTRATION_DATE DESC,
+            pers.LAST_NAME,
+            pers.FIRST_NAME,
+            pers.MID_NAME,
+            pers.BIRTHDAY_YEAR,
+            pers.BIRTHDAY_MONTH,
+            pers.BIRTHDAY_DAY
+        LIMIT #{rangeTo} - #{rangeFrom}
+        OFFSET #{rangeFrom}
+    ]]>
+    </select>
+
+    <select id="getPersonFIO" resultMap="personLiteMap">
+        SELECT pers.ID          AS ID,
+               pers.FIRST_NAME  AS FIRST_NAME,
+               pers.MID_NAME    AS MID_NAME,
+               pers.LAST_NAME   AS LAST_NAME
+        FROM PERSON pers
+        WHERE pers.ID = #{personId}
+    </select>
+</mapper>

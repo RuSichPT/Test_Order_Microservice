@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf8" ?>
+<message>
+	<command>create</command>
+	<body>
+		<order>
+			<orderStatusId>1</orderStatusId>
+			<customerName>John Doe</customerName>
+			<customerPhone>+7-905-345-4523</customerPhone>
+			<customerComment>Please call me back</customerComment>
+			<items>
+				<item>Item #1</item>
+				<item>Item #2</item>
+				<item>Item #3</item>
+			</items>
+		</order>
+	</body>
+</message>

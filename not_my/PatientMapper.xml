@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inobitec.ris.patient.dao.mappers.PatientMapper">
+
+    <resultMap id="PatientMap" type="com.inobitec.ris.patient.beans.PatientBean">
+      <result property="id" column="ID"/>
+      <result property="firstName" column="FIRST_NAME"/>
+      <result property="midName" column="MID_NAME"/>     
+      <result property="lastName" column="LAST_NAME"/> 
+      <result property="genderId" column="GENDER_ID"/>
+      <result property="phone1" column="PHONE1"/>
+      <result property="phone2" column="PHONE2"/>
+      <result property="email" column="EMAIL"/>
+    </resultMap>        
+
+	<select id="selectPatient" parameterType="int" resultMap="PatientMap">
+		SELECT p.ID, 
+		       p.FIRST_NAME,
+		       p.MID_NAME,
+		       p.LAST_NAME,
+		       p.GENDER_ID, 
+		       p.PHONE1,
+		       p.PHONE2,
+		       p.EMAIL
+		FROM PATIENT p
+		WHERE p.ID = #{id} 
+    </select>
+
+	<insert id="insertPatient" keyColumn="ID" keyProperty="id" parameterType="com.inobitec.ris.patient.beans.PatientBean">
+    	<selectKey keyProperty="id" resultType="int" order="BEFORE">
+       		SELECT NEXTVAL('PATIENT_SEQ') 
+     	</selectKey>
+	    INSERT INTO PATIENT (ID, FIRST_NAME, MID_NAME, LAST_NAME, GENDER_ID, PHONE1, PHONE2,EMAIL)
+	    VALUES (#{id}, #{firstName}, #{midName}, #{lastName}, #{genderId}, #{phone1}, #{phone2}, #{email})
+    </insert>
+
+    <update id="updatePatient" parameterType="com.inobitec.ris.patient.beans.PatientBean">
+     	UPDATE PATIENT
+     	SET 
+		    FIRST_NAME = #{p.firstName}, 
+		    MID_NAME = #{p.midName},
+		    LAST_NAME = #{p.lastName},
+		    GENDER_ID = #{p.genderId},
+		    PHONE1 = #{p.phone1},
+		    PHONE2 = #{p.phone2}, 
+		    EMAIL = #{p.email}
+     	WHERE ID = #{id}
+    </update>
+
+	<delete id="deletePatient">
+		DELETE FROM PATIENT WHERE ID = #{id}
+	</delete>
+
+    <resultMap id="PatientSuggestMap" type="com.inobitec.ris.patient.beans.PatientLiteBean">
+      <result property="id" column="ID"/>
+      <result property="fullName" column="FULL_NAME"/>
+      <result property="phone1" column="PHONE1"/>
+    </resultMap>        
+
+	<select id="selectPatientSuggestions" parameterType="string" resultMap="PatientSuggestMap">
+		SELECT p.ID as ID, 
+			   (p.LAST_NAME || ' ' || p.FIRST_NAME || ' ' || p.MID_NAME) as FULL_NAME,
+			   p.PHONE1 as PHONE1 
+		FROM PATIENT p
+		WHERE p.LAST_NAME LIKE (#{pattern} || '%')
+    </select>
+
+</mapper>
