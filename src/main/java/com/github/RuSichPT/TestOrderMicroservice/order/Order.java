@@ -76,13 +76,27 @@ public class Order {
                 NodeList items = property.getChildNodes();
 
                 ArrayList<OrderItem> arrayList = new ArrayList<>();
-                for (int i = 0; i < items.getLength(); i++)
+                for (int c0 = 0; c0 < items.getLength(); c0++)
                 {
-                    Node item = items.item(i);
+                    Node item = items.item(c0);
                     if (item.getNodeType() != Node.TEXT_NODE)
                     {
+                        NodeList properties = item.getChildNodes();
                         OrderItem orderItem = new OrderItem();
-                        orderItem.setItemName(item.getTextContent());
+                        for (int c1 = 0; c1 < properties.getLength(); c1++)
+                        {
+                            Node property1 = properties.item(c1);
+                            String content1 = property.getTextContent();
+                            if (property1.getNodeType() != Node.TEXT_NODE)
+                            {
+                                switch (property1.getNodeName())
+                                {
+                                    case "id" -> orderItem.setId(Integer.parseInt(content1));
+                                    case "orderId" -> orderItem.setOrderId(Integer.parseInt(content1));
+                                    case "itemName" -> orderItem.setItemName(item.getTextContent());
+                                }
+                            }
+                        }
                         arrayList.add(orderItem);
                     }
                 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf8" ?>
+<message>
+	<command>update</command>
+	<body>
+		<order>
+			<id>1000</id>
+			<orderStatusId>1</orderStatusId>
+			<customerName>Vlad Test</customerName>
+			<customerPhone>+7-905-345-4523</customerPhone>
+			<customerComment>Please call me back</customerComment>
+			<items>
+				<item>
+					<id>1000</id>
+					<orderId>1000</orderId>
+					<itemName>Item #1</itemName>
+				</item>
+				<item>
+					<id>1000</id>
+					<orderId>1000</orderId>
+					<itemName>Item #2</itemName>
+				</item>
+				<item>
+					<id>1000</id>
+					<orderId>1000</orderId>
+					<itemName>Item #3</itemName>
+				</item>
+			</items>
+		</order>
+	</body>
+</message>

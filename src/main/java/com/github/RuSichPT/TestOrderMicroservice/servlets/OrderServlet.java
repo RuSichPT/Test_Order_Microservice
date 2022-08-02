@@ -7,6 +7,7 @@ import com.github.RuSichPT.TestOrderMicroservice.services.ParserXML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -41,39 +43,77 @@ public class OrderServlet extends HttpServlet {
         Order order = orderService.select(Integer.parseInt(id));
         PrintWriter printWriter = resp.getWriter();
 
-        try
-        {
-            printWriter.println(order.toString());
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        finally {
-            printWriter.close();
-        }
+        printWriter.println(order.toString());
+        printWriter.close();
 
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws RuntimeException, ServletException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
 
         resp.setContentType("text/html");
-        try {
-            BufferedReader reader = req.getReader();
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(new InputSource(reader));
 
+        Document document = null;
+        try {
+            document = createDocumentFromReq(req);
             ParserXML parserXML = new ParserXML(document);
+
             if (parserXML.getCommand() != Command.CREATE)
             {
                 resp.sendError(SC_BAD_REQUEST);
-                throw new ServletException("wrong command, expected CREATE");
+                throw new ServletException("wrong command, expected " + Command.CREATE.toString());
             }
 
             orderService.insert(parserXML.getOrder());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
+    {
+        resp.setContentType("text/html");
+
+        Document document = null;
+        try {
+            document = createDocumentFromReq(req);
+            ParserXML parserXML = new ParserXML(document);
+
+            if (parserXML.getCommand() != Command.UPDATE)
+            {
+                resp.sendError(SC_BAD_REQUEST);
+                throw new ServletException("wrong command, expected " + Command.UPDATE.toString());
+            }
+            Order order = parserXML.getOrder();
+            orderService.update(order.getId(), order);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException
+    {
+        resp.setContentType("text/html");
+        String id = req.getParameter("id");
+
+        if (id == null) {
+            resp.sendError(SC_NOT_FOUND);
+            return;
+        }
+
+        orderService.delete(Integer.parseInt(id));
+    }
+
+    private Document createDocumentFromReq(HttpServletRequest req) throws IOException, ParserConfigurationException, SAXException {
+        BufferedReader reader = req.getReader();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(new InputSource(reader));
+        reader.close();
+
+        return doc;
     }
 }

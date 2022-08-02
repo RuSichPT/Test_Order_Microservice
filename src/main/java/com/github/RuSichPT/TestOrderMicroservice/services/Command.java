@@ -1,10 +1,18 @@
 package com.github.RuSichPT.TestOrderMicroservice.services;
 
 public enum Command {
-    CREATE,
-    READ,
-    UPDATE,
-    DELETE;
+    CREATE("create"),
+    READ("read"),
+    UPDATE("update"),
+    DELETE("delete");
+
+    private String command;
+
+    Command(String command)
+    {
+        this.command = command;
+    }
+
     static Command toCommand(String command) throws RuntimeException
     {
         command = command.toLowerCase();
@@ -16,5 +24,10 @@ public enum Command {
             case "delete" -> DELETE;
             default -> throw new RuntimeException("is not command");
         };
+    }
+
+    @Override
+    public String toString() {
+        return this.command;
     }
 }
