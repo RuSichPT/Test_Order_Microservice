@@ -8,9 +8,15 @@
 			<customerPhone>+7-905-345-4523</customerPhone>
 			<customerComment>Please call me back</customerComment>
 			<items>
-				<item>Item #1</item>
-				<item>Item #2</item>
-				<item>Item #3</item>
+				<item>
+					<itemName>Item #1</itemName>
+				</item>
+				<item>
+					<itemName>Item #2</itemName>
+				</item>
+				<item>
+					<itemName>Item #3</itemName>
+				</item>
 			</items>
 		</order>
 	</body>

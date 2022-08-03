@@ -67,6 +67,7 @@ public class Order {
         String content = property.getTextContent();
         switch (property.getNodeName())
         {
+            case "id" -> setId(Integer.parseInt(content));
             case "orderStatusId" -> setOrderStatusId(Integer.parseInt(content));
             case "customerName" -> setCustomerName(content);
             case "customerPhone" -> setCustomerPhone(content);
@@ -85,16 +86,10 @@ public class Order {
                         OrderItem orderItem = new OrderItem();
                         for (int c1 = 0; c1 < properties.getLength(); c1++)
                         {
-                            Node property1 = properties.item(c1);
-                            String content1 = property.getTextContent();
-                            if (property1.getNodeType() != Node.TEXT_NODE)
+                            Node propOrderItem = properties.item(c1);
+                            if (propOrderItem.getNodeType() != Node.TEXT_NODE)
                             {
-                                switch (property1.getNodeName())
-                                {
-                                    case "id" -> orderItem.setId(Integer.parseInt(content1));
-                                    case "orderId" -> orderItem.setOrderId(Integer.parseInt(content1));
-                                    case "itemName" -> orderItem.setItemName(item.getTextContent());
-                                }
+                                orderItem.fillProperty(propOrderItem);
                             }
                         }
                         arrayList.add(orderItem);

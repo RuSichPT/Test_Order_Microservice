@@ -1,5 +1,7 @@
 package com.github.RuSichPT.TestOrderMicroservice.order;
 
+import org.w3c.dom.Node;
+
 public class OrderItem {
     private int id;
 
@@ -29,6 +31,18 @@ public class OrderItem {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
+    }
+
+    public void fillProperty(Node property)
+    {
+        String content = property.getTextContent();
+
+        switch (property.getNodeName())
+        {
+            case "id" -> setId(Integer.parseInt(content));
+            case "orderId" -> setOrderId(Integer.parseInt(content));
+            case "itemName" -> setItemName(content);
+        }
     }
 
     @Override

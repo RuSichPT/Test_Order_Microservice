@@ -5,6 +5,7 @@ import com.github.RuSichPT.TestOrderMicroservice.services.Command;
 import com.github.RuSichPT.TestOrderMicroservice.services.OrderServiceImpl;
 import com.github.RuSichPT.TestOrderMicroservice.services.ParserXML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.server.ResponseStatusException;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -53,40 +54,48 @@ public class OrderServlet extends HttpServlet {
 
         resp.setContentType("text/html");
 
-        Document document = null;
         try {
-            document = createDocumentFromReq(req);
+            Document document = createDocumentFromReq(req);
             ParserXML parserXML = new ParserXML(document);
 
             if (parserXML.getCommand() != Command.CREATE)
             {
                 resp.sendError(SC_BAD_REQUEST);
-                throw new ServletException("wrong command, expected " + Command.CREATE.toString());
+                throw new ServletException("wrong command, expected " + Command.CREATE);
             }
-
-            orderService.insert(parserXML.getOrder());
+            Order order = parserXML.getOrder();
+            orderService.insert(order);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-    {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
 
-        Document document = null;
+        String id = req.getParameter("id");
+
+        if (id == null) {
+            resp.sendError(SC_NOT_FOUND);
+            return;
+        }
+
         try {
-            document = createDocumentFromReq(req);
+            Document document = createDocumentFromReq(req);
             ParserXML parserXML = new ParserXML(document);
 
             if (parserXML.getCommand() != Command.UPDATE)
             {
                 resp.sendError(SC_BAD_REQUEST);
-                throw new ServletException("wrong command, expected " + Command.UPDATE.toString());
+                throw new ServletException("wrong command, expected " + Command.UPDATE);
             }
             Order order = parserXML.getOrder();
-            orderService.update(order.getId(), order);
+            orderService.update(Integer.parseInt(id), order);
+        } catch (ResponseStatusException e)
+        {
+            resp.sendError(SC_NOT_FOUND);
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
