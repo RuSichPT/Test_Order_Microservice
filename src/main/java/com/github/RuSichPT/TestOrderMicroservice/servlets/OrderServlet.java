@@ -2,6 +2,7 @@ package com.github.RuSichPT.TestOrderMicroservice.servlets;
 
 import com.github.RuSichPT.TestOrderMicroservice.order.Order;
 import com.github.RuSichPT.TestOrderMicroservice.services.Command;
+import com.github.RuSichPT.TestOrderMicroservice.services.ConverterXML;
 import com.github.RuSichPT.TestOrderMicroservice.services.OrderServiceImpl;
 import com.github.RuSichPT.TestOrderMicroservice.services.ParserXML;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
-        resp.setContentType("text/html");
+        resp.setContentType("text/xml");
         String id = req.getParameter("id");
 
         if (id == null) {
@@ -42,17 +43,21 @@ public class OrderServlet extends HttpServlet {
             return;
         }
         Order order = orderService.select(Integer.parseInt(id));
+
+        if (order == null) {
+            resp.sendError(SC_NOT_FOUND);
+            return;
+        }
+
         PrintWriter printWriter = resp.getWriter();
 
-        printWriter.println(order.toString());
+        printWriter.println(ConverterXML.convert(order));
         printWriter.close();
 
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-
-        resp.setContentType("text/html");
 
         try {
             Document document = createDocumentFromReq(req);
@@ -72,7 +77,6 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/html");
 
         String id = req.getParameter("id");
 
@@ -105,7 +109,6 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException
     {
-        resp.setContentType("text/html");
         String id = req.getParameter("id");
 
         if (id == null) {

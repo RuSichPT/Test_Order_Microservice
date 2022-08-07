@@ -3,9 +3,14 @@ package com.github.RuSichPT.TestOrderMicroservice.order;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD) // or @XmlType(propOrder = {"id", "orderStatusId", "customerName", "customerPhone", "customerComment", "orderItems"})
 public class Order {
     private int id;
     private int orderStatusId;
