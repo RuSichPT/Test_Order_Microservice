@@ -1,6 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.servlets;
 
-import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import com.github.RuSichPT.TestOrderMicroservice.entities.Order;
 import com.github.RuSichPT.TestOrderMicroservice.services.Command;
 import com.github.RuSichPT.TestOrderMicroservice.services.ConverterXML;
 import com.github.RuSichPT.TestOrderMicroservice.services.OrderServiceImpl;

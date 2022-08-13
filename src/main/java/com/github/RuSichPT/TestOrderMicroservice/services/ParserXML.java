@@ -1,6 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.services;
 
-import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import com.github.RuSichPT.TestOrderMicroservice.entities.Order;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

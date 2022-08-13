@@ -1,6 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.mappers;
 
-import com.github.RuSichPT.TestOrderMicroservice.order.OrderItem;
+import com.github.RuSichPT.TestOrderMicroservice.entities.OrderItem;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

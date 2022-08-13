@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.RuSichPT.TestOrderMicroservice.mappers.SessionMapper">
+
+    <resultMap id="SessionMap" type="com.github.RuSichPT.TestOrderMicroservice.entities.Session">
+        <id property="id" column="id"/>
+        <result property="sessionId" column="session_id"/>
+        <result property="startTime" column="start_time"/>
+        <result property="timeoutMinutes" column="timeout_minutes"/>
+    </resultMap>
+
+<!--    <insert id="insertSession">-->
+<!--        INSERT INTO "session" (ID, SESSION_ID, START_TIME, TIMEOUT_MINUTES)-->
+<!--        VALUES (NEXTVAL('session_seq'),#{sessionId}, #{startTime}, #{timeoutMinutes});-->
+<!--    </insert>-->
+
+    <select id="selectSession" resultMap="SessionMap">
+        SELECT * FROM "session" WHERE SESSION_ID = #{sessionId};
+    </select>
+
+</mapper>

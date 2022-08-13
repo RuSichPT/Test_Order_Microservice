@@ -1,6 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.services;
 
-import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import com.github.RuSichPT.TestOrderMicroservice.entities.Order;
 
 public interface OrderService {
 

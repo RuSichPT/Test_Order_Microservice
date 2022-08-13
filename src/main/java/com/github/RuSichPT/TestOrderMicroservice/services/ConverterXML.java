@@ -1,6 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.services;
 
-import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import com.github.RuSichPT.TestOrderMicroservice.entities.Order;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;

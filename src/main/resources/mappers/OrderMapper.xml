@@ -4,13 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.github.RuSichPT.TestOrderMicroservice.mappers.OrderMapper">
 
-    <resultMap id="OrderItemMap" type="com.github.RuSichPT.TestOrderMicroservice.order.OrderItem">
+    <resultMap id="OrderItemMap" type="com.github.RuSichPT.TestOrderMicroservice.entities.OrderItem">
         <id property="id" column="id"/>
         <result property="orderId" column="order_id"/>
         <result property="itemName" column="item_name"/>
     </resultMap>
 
-    <resultMap id="OrderMap" type="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+    <resultMap id="OrderMap" type="com.github.RuSichPT.TestOrderMicroservice.entities.Order">
         <id property="id" column="id"/>
         <result property="orderStatusId" column="order_status_id"/>
         <result property="customerName" column="customer_name"/>
@@ -19,9 +19,9 @@
         <collection property="orderItems" resultMap="OrderItemMap" columnPrefix="OI_"/>
     </resultMap>
 
-    <insert id="insertOrder" keyColumn="ID" keyProperty="id" parameterType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+    <insert id="insertOrder" keyColumn="ID" keyProperty="id" parameterType="com.github.RuSichPT.TestOrderMicroservice.entities.Order">
         <selectKey keyProperty="id" resultType="int" order="BEFORE">
-            SELECT NEXTVAL('ORDER_SEQ')
+            SELECT NEXTVAL('order_seq')
         </selectKey>
         INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
         VALUES (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
@@ -47,7 +47,7 @@
         WHERE o.ID = #{id}
     </select>
 
-    <update id="updateOrder" parameterType="com.github.RuSichPT.TestOrderMicroservice.order.Order">
+    <update id="updateOrder" parameterType="com.github.RuSichPT.TestOrderMicroservice.entities.Order">
         UPDATE "order"
         SET
         ORDER_STATUS_ID = #{orderStatusId},

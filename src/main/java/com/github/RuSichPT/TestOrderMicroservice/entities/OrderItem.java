@@ -1,4 +1,4 @@
-package com.github.RuSichPT.TestOrderMicroservice.order;
+package com.github.RuSichPT.TestOrderMicroservice.entities;
 
 import org.w3c.dom.Node;
 

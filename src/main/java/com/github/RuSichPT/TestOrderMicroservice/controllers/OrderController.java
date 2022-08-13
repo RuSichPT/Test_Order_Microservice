@@ -1,6 +1,6 @@
 package com.github.RuSichPT.TestOrderMicroservice.controllers;
 
-import com.github.RuSichPT.TestOrderMicroservice.order.Order;
+import com.github.RuSichPT.TestOrderMicroservice.entities.Order;
 import com.github.RuSichPT.TestOrderMicroservice.services.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
