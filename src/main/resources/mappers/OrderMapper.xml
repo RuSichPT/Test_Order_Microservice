@@ -13,8 +13,7 @@
     <resultMap id="OrderMap" type="com.github.RuSichPT.TestOrderMicroservice.entities.Order">
         <id property="id" column="id"/>
         <result property="orderStatusId" column="order_status_id"/>
-        <result property="customerName" column="customer_name"/>
-        <result property="customerPhone" column="customer_phone"/>
+        <result property="patientId" column="patient_id"/>
         <result property="customerComment" column="customer_comment"/>
         <collection property="orderItems" resultMap="OrderItemMap" columnPrefix="OI_"/>
     </resultMap>
@@ -23,8 +22,8 @@
         <selectKey keyProperty="id" resultType="int" order="BEFORE">
             SELECT NEXTVAL('order_seq')
         </selectKey>
-        INSERT INTO "order" (ID, ORDER_STATUS_ID, CUSTOMER_NAME, CUSTOMER_PHONE, CUSTOMER_COMMENT)
-        VALUES (#{id}, #{orderStatusId}, #{customerName}, #{customerPhone}, #{customerComment});
+        INSERT INTO "order" (ID, ORDER_STATUS_ID, PATIENT_ID, CUSTOMER_COMMENT)
+        VALUES (#{id}, #{orderStatusId}, #{patientId}, #{customerComment});
 
         INSERT INTO "order_item"(ID, ORDER_ID, ITEM_NAME) VALUES
         <foreach collection="orderItems" item="oi" separator=", ">
@@ -36,8 +35,7 @@
         SELECT
         o.ID,
         o.ORDER_STATUS_ID,
-        o.CUSTOMER_NAME,
-        o.CUSTOMER_PHONE,
+        o.PATIENT_ID,
         o.CUSTOMER_COMMENT,
         oi.ID AS OI_ID,
         oi.ORDER_ID AS OI_ORDER_ID,
@@ -47,12 +45,24 @@
         WHERE o.ID = #{id}
     </select>
 
+    <select id="selectCurrentOrder" resultMap="OrderMap">
+        SELECT
+        o.ID,
+        o.ORDER_STATUS_ID,
+        o.PATIENT_ID,
+        o.CUSTOMER_COMMENT,
+        oi.ID AS OI_ID,
+        oi.ORDER_ID AS OI_ORDER_ID,
+        oi.ITEM_NAME AS OI_ITEM_NAME
+        FROM "order" as o
+        JOIN ORDER_ITEM as oi ON o.ID = oi.ORDER_ID
+        WHERE o.ID = CURRVAL('order_seq');
+    </select>
+
     <update id="updateOrder" parameterType="com.github.RuSichPT.TestOrderMicroservice.entities.Order">
         UPDATE "order"
         SET
         ORDER_STATUS_ID = #{orderStatusId},
-        CUSTOMER_NAME = #{customerName},
-        CUSTOMER_PHONE = #{customerPhone},
         CUSTOMER_COMMENT = #{customerComment}
         WHERE ID = #{id}
     </update>

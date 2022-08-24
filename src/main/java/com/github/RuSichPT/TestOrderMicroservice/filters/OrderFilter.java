@@ -12,9 +12,8 @@ import java.io.IOException;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
-@WebFilter
+@WebFilter("/new")
 public class OrderFilter implements Filter {
-
     @Autowired
     SessionServiceImpl sessionServiceImpl;
     @Override
@@ -44,6 +43,7 @@ public class OrderFilter implements Filter {
             sendError("Session expired", response);
             return;
         }
+
         //Разрешить request продвигаться дальше. (Перейти данный Filter).
         filterChain.doFilter(servletRequest, servletResponse);
     }

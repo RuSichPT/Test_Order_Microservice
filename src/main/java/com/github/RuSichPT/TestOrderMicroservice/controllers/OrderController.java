@@ -8,16 +8,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("order")
+@RequestMapping(
+        value = "order",
+        produces="application/json"
+)
 public class OrderController {
 
     @Autowired
     private OrderServiceImpl orderService;
 
     @PostMapping
-    public void insertOrder(@RequestBody Order order)
+    public Order insertOrder(@RequestBody Order order)
     {
-        orderService.insert(order);
+        if (order.getPatient() == null)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        return orderService.insert(order);
     }
 
     @GetMapping(path = "{id}")
@@ -32,9 +39,14 @@ public class OrderController {
     }
 
     @PutMapping(path = "{id}")
-    public void updateOrder(@PathVariable int id, @RequestBody Order order)
+    public Order updateOrder(@PathVariable int id, @RequestBody Order order)
     {
-        orderService.update(id, order);
+        if (order.getPatient() == null)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        return orderService.update(id, order);
     }
 
     @DeleteMapping(path = "{id}")

@@ -15,7 +15,7 @@ public class SessionServiceImpl implements SessionService{
     @Override
     @Cacheable(cacheNames = "session")
     public Session select(String sessionId) {
-        System.out.println("select");
+        System.out.println("select sessionId in data base");
         return sessionMapper.selectSession(sessionId);
     }
 }

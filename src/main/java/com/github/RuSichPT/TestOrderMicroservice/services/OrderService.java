@@ -4,11 +4,11 @@ import com.github.RuSichPT.TestOrderMicroservice.entities.Order;
 
 public interface OrderService {
 
-    void insert(Order order);
+    Order insert(Order order);
 
     Order select(int id);
 
-    void update(int id, Order order);
+    Order update(int id, Order order);
 
     void delete(int id);
 

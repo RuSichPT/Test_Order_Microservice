@@ -2,6 +2,8 @@ package com.github.RuSichPT.TestOrderMicroservice.entities;
 
 import org.w3c.dom.Node;
 
+import java.util.Objects;
+
 public class OrderItem {
     private int id;
 
@@ -52,5 +54,18 @@ public class OrderItem {
                 ", orderId=" + orderId +
                 ", itemName='" + itemName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return id == orderItem.id && orderId == orderItem.orderId && Objects.equals(itemName, orderItem.itemName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderId, itemName);
     }
 }

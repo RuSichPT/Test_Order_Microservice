@@ -1,0 +1,27 @@
+{
+  "orderStatusId": 1,
+  "customerComment": "Pls. call me back",
+  "orderItems":
+  [
+    {
+      "itemName": "Item #1"
+    },
+    {
+      "itemName": "Item #2"
+    },
+    {
+      "itemName": "Item #3"
+    }
+  ],
+  "patient":
+  {
+     "firstName": "Павел",
+     "midName": "Андреевич",
+     "lastName": "Токарев",
+     "genderId": 1,
+     "birthday": "1996-07-12",
+     "phone": "+7952558****",
+     "email": "tokarev*********@mail.ru",
+     "address": "Воронеж"
+  }
+}

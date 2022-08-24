@@ -1,0 +1,36 @@
+{
+  "id":1014,
+  "orderStatusId": 1,
+  "patientId":1,
+  "customerComment": "Pls. call me back",
+  "orderItems":
+  [
+    {
+      "id": 1000,
+      "orderId": 1014,
+      "itemName": "Item #1"
+    },
+    {
+      "id": 1001,
+      "orderId": 1014,
+      "itemName": "Item #2"
+    },
+    {
+      "id": 1002,
+      "orderId": 1014,
+      "itemName": "Item #3"
+    }
+  ],
+  "patient":
+  {
+     "id":1,
+     "firstName": "Павел",
+     "midName": "Андреевич",
+     "lastName": "Токарев",
+     "genderId": 1,
+     "birthday": "1996-07-12",
+     "phone": "+7952558****",
+     "email": "tokarev*********@mail.ru",
+     "address": "Воронеж"
+  }
+}

@@ -8,16 +8,19 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD) // or @XmlType(propOrder = {"id", "orderStatusId", "customerName", "customerPhone", "customerComment", "orderItems"})
+@XmlRootElement // For ConverterXML
+@XmlAccessorType(XmlAccessType.FIELD) // or @XmlType(propOrder = {"id", "orderStatusId", "patientId", "customerComment", "orderItems"})
 public class Order {
     private int id;
     private int orderStatusId;
-    private String customerName;
-    private String customerPhone;
+
+    private int patientId;
     private String customerComment;
     private List<OrderItem> orderItems;
+
+    private Patient patient;
 
     public int getId() {
         return id;
@@ -35,20 +38,12 @@ public class Order {
         this.orderStatusId = orderStatusId;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public int getPatientId() {
+        return patientId;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerPhone() {
-        return customerPhone;
-    }
-
-    public void setCustomerPhone(String customerPhone) {
-        this.customerPhone = customerPhone;
+    public void setPatientId(int patientId) {
+        this.patientId = patientId;
     }
 
     public String getCustomerComment() {
@@ -67,6 +62,14 @@ public class Order {
         this.orderItems = orderItems;
     }
 
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
     public void fillProperty(Node property)
     {
         String content = property.getTextContent();
@@ -74,8 +77,7 @@ public class Order {
         {
             case "id" -> setId(Integer.parseInt(content));
             case "orderStatusId" -> setOrderStatusId(Integer.parseInt(content));
-            case "customerName" -> setCustomerName(content);
-            case "customerPhone" -> setCustomerPhone(content);
+            case "patientId" -> setPatientId(Integer.parseInt(content));
             case "customerComment" -> setCustomerComment(content);
             case "items" ->
             {
@@ -110,10 +112,23 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", orderStatusId=" + orderStatusId +
-                ", customerName='" + customerName + '\'' +
-                ", customerPhone='" + customerPhone + '\'' +
+                ", patientId=" + patientId +
                 ", customerComment='" + customerComment + '\'' +
                 ", orderItems=" + orderItems +
+                ", patient=" + patient +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id == order.id && orderStatusId == order.orderStatusId && patientId == order.patientId && Objects.equals(customerComment, order.customerComment) && Objects.equals(orderItems, order.orderItems) && Objects.equals(patient, order.patient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderStatusId, patientId, customerComment, orderItems, patient);
     }
 }
