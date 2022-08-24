@@ -13,11 +13,13 @@
 
 <!--    <insert id="insertSession">-->
 <!--        INSERT INTO "session" (ID, SESSION_ID, START_TIME, TIMEOUT_MINUTES)-->
-<!--        VALUES (NEXTVAL('session_seq'),#{sessionId}, #{startTime}, #{timeoutMinutes});-->
+<!--        VALUES (NEXTVAL('session_seq'), #{sessionId}, #{startTime}, #{timeoutMinutes});-->
 <!--    </insert>-->
 
     <select id="selectSession" resultMap="SessionMap">
-        SELECT * FROM "session" WHERE SESSION_ID = #{sessionId};
+        SELECT
+        ID, SESSION_ID, START_TIME, TIMEOUT_MINUTES
+        FROM "session" WHERE SESSION_ID = #{sessionId};
     </select>
 
 </mapper>
